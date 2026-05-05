@@ -25,7 +25,7 @@
         .report-frame {
             background: white;
             width: 95%;
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 20px 0;
             padding: 4px; 
             border-radius: 20px;
@@ -68,32 +68,23 @@
         .project-grid {
             padding: 60px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             justify-content: center;
         }
 
         .card {
-            aspect-ratio: 2 / 3.2;
+            aspect-ratio: 2 / 3.4;
             border-radius: 25px;
             padding: 25px;
             display: flex;
             flex-direction: column;
-            transition: 0.4s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            background: #fdfdfd;
-            color: #333;
-            border: 1px solid #eee;
-        }
-
-        .card-irina {
-            background: linear-gradient(45deg, var(--pink-irina), var(--mint-irina));
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             color: white;
-            border: none;
-            box-shadow: 0 10px 25px rgba(188, 138, 191, 0.3);
+            position: relative;
         }
 
-        .card:hover { transform: translateY(-10px); }
+        .card:hover { transform: translateY(-15px); }
 
         .card-image-placeholder {
             width: 100%;
@@ -117,33 +108,39 @@
         }
 
         .card p {
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.4;
             flex-grow: 1;
+            opacity: 0.9;
         }
 
         .card-btn {
-            background: #2c3e50;
-            color: white;
+            background: white;
             padding: 12px;
             border-radius: 12px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             text-align: center;
             transition: 0.3s;
         }
 
-        .card-irina .card-btn {
-            background: white;
-            color: var(--pink-irina);
-        }
+        /* PALETA DE COLORES POR CARTA */
+        .c-irina { background: linear-gradient(45deg, #bc8abf, #96e8da); color: white; }
+        .c-irina .card-btn { color: #bc8abf; }
 
-        .card-irina .card-btn:hover {
-            background: #f8f8f8;
-            transform: scale(1.02);
-        }
+        .c-donny { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+        .c-donny .card-btn { color: #4facfe; }
+
+        .c-companion { background: linear-gradient(45deg, #667eea, #764ba2); }
+        .c-companion .card-btn { color: #667eea; }
+
+        .c-qore { background: linear-gradient(45deg, #f093fb, #f5576c); }
+        .c-qore .card-btn { color: #f5576c; }
+
+        .c-pulse { background: linear-gradient(45deg, #43e97b, #38f9d7); }
+        .c-pulse .card-btn { color: #43e97b; }
     </style>
 </head>
 <body>
@@ -158,29 +155,46 @@
             </header>
 
             <div class="project-grid">
-                <!-- TARJETA IRINA HIRE SELECTION -->
-                <div class="card card-irina">
+                <!-- 1. IRINA HIRE -->
+                <div class="card c-irina">
                     <div class="card-image-placeholder">
-                        <img src="https://i.ibb.co/wNPN7GP4/cuadrada-para-blic-de-sitio-bluelab.jpg" alt="Irina Hire Selection">
+                        <img src="https://i.ibb.co/wNPN7GP4/cuadrada-para-blic-de-sitio-bluelab.jpg" alt="Irina Hire">
                     </div>
                     <h2>Irina Hire</h2>
-                    <p>Sistema de automatización y entrevista para validación de idoneidad eficiente en procesos de selección.</p>
-                    <a href="#" class="card-btn">SOLICITAR ACCESO</a>
+                    <p>Sistema de automatización y entrevista para validación de idoneidad eficiente en procesos de selección profesional.</p>
+                    <a href="#" class="card-btn">AGENDAR CONSULTA</a>
                 </div>
 
-                <!-- OTRAS TARJETAS -->
-                <div class="card">
+                <!-- 2. DONNY SB -->
+                <div class="card c-donny">
                     <div class="card-image-placeholder"></div>
                     <h2>Donny SB</h2>
-                    <p>Integración de Realidad Aumentada para la automatización de ofertas en el sector retail.</p>
-                    <a href="#" class="card-btn" style="background:#eee; color:#666;">EN DESARROLLO</a>
+                    <p>Tutoría adaptativa y soporte corporativo con memoria de progreso y gestión personalizada de conocimiento.</p>
+                    <a href="#" class="card-btn">SOLICITAR DEMO</a>
                 </div>
 
-                <div class="card">
+                <!-- 3. COMPANION 24/7 -->
+                <div class="card c-companion">
                     <div class="card-image-placeholder"></div>
-                    <h2>Sqore</h2>
-                    <p>Sistema de scoring predictivo para la optimización y análisis de idoneidad operativa.</p>
-                    <a href="#" class="card-btn" style="background:#eee; color:#666;">VER ROADMAP</a>
+                    <h2>Companion</h2>
+                    <p>Asistente de acompañamiento integral con reportes de bienestar y geolocalización inteligente para el cuidado diario.</p>
+                    <a href="#" class="card-btn">VER PROTOCOLO</a>
+                </div>
+
+                <!-- 4. QORE -->
+                <div class="card c-qore">
+                    <div class="card-image-placeholder"></div>
+                    <h2>Qore</h2>
+                    <p>Ecosistema centralizado de precios y ofertas en tiempo real. Integración fluida entre proveedores, comercios y clientes.</p>
+                    <a href="#" class="card-btn">EXPLORAR MAPA</a>
+                </div>
+
+                <!-- 5. PULSE INSIGHT -->
+                <div class="card c-pulse">
+                    <div class="card-image-placeholder"></div>
+                    <h2>Pulse Insight</h2>
+                    <p>Plataforma de feedback y escucha activa para potenciar el bienestar laboral y la comunicación estratégica interna.</p>
+                    <a href="#" class="card-btn">SOLICITAR ANÁLISIS</a>
                 </div>
             </div>
         </div>
