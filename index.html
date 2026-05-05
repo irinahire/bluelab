@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blueprint Integrations Lab</title>
+    <title>BlueLab | Blueprint Integrations Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,7 +22,6 @@
             min-height: 100vh;
         }
 
-        /* El Marco del Reporte */
         .report-frame {
             background: white;
             width: 95%;
@@ -42,68 +41,64 @@
             flex-direction: column;
         }
 
-        /* Banda Superior de Impacto (Header) */
+        /* Volvemos a la cabecera original con banda de color completa */
         header {
             background: linear-gradient(to right, var(--pink-irina), var(--mint-irina));
-            padding: 40px 60px;
+            padding: 50px 60px;
             border-radius: 16px 16px 0 0;
             color: white;
         }
 
         .brand h1 {
             font-family: 'Alkatra', cursive;
-            font-size: 3.5rem;
+            font-size: 4rem; /* BlueLab bien grande */
             margin: 0;
-            letter-spacing: -1px;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+            line-height: 0.9;
         }
 
         .brand span {
             font-size: 1rem;
-            letter-spacing: 6px;
+            letter-spacing: 5px;
             text-transform: uppercase;
             font-weight: 600;
             opacity: 0.9;
+            display: block;
+            margin-top: 5px;
         }
 
-        /* Contenedor de Naipes */
         .project-grid {
             padding: 60px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 40px;
             justify-content: center;
         }
 
-        /* Formato Naipe (Vertical) */
+        /* NAIPE ESTILIZADO */
         .card {
-            aspect-ratio: 2 / 3.5; /* Esto le da la forma alargada de naipe */
+            aspect-ratio: 2 / 3.4;
             border-radius: 25px;
-            padding: 20px;
+            padding: 25px;
             color: white;
             display: flex;
             flex-direction: column;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             position: relative;
-            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-15px) rotate(1deg);
+            transform: translateY(-15px);
         }
 
-        /* Espacio para la imagen de IMGBB */
+        /* Espacio para la imagen */
         .card-image-placeholder {
             width: 100%;
-            height: 50%;
-            background: rgba(255,255,255,0.15);
-            border-radius: 15px;
+            height: 55%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 18px;
             margin-bottom: 20px;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .card-image-placeholder img {
@@ -114,20 +109,19 @@
 
         .card h2 {
             margin: 0 0 10px 0;
-            font-size: 1.6rem;
-            font-weight: 700;
+            font-size: 1.8rem;
             font-family: 'Alkatra', cursive;
         }
 
         .card p {
-            font-size: 0.95rem;
-            line-height: 1.4;
+            font-size: 0.9rem;
+            line-height: 1.5;
             opacity: 0.95;
             flex-grow: 1;
         }
 
         .card-btn {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             color: #333;
             padding: 12px;
             border-radius: 12px;
@@ -136,7 +130,6 @@
             font-weight: 700;
             text-transform: uppercase;
             text-align: center;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -147,42 +140,23 @@
             
             <header>
                 <div class="brand">
-                    <h1>Blueprint Integrations Lab</h1>
-                    <span>BlueLab</span>
+                    <h1>BlueLab</h1>
+                    <span>Blueprint Integrations Lab</span>
                 </div>
             </header>
 
             <div class="project-grid">
-                <!-- NAIPE IRINA -->
-                <div class="card" style="background: linear-gradient(180deg, #bc8abf, #8e44ad);">
+                <!-- NAIPE IRINA HIRE SELECTION -->
+                <div class="card" style="background: linear-gradient(-45deg, #bc8abf, #96e8da);">
                     <div class="card-image-placeholder">
-                        <!-- Aquí pones el link directo de tu imagen de IMGBB -->
-                        <img src="URL_DE_TU_IMAGEN_IRINA" alt="Irina">
+                        <img src="URL_AQUÍ" alt="Irina Hire Selection">
                     </div>
                     <h2>Irina Hire</h2>
-                    <p>Ranking de talento mediante IA para eliminar techos de cristal operativos.</p>
-                    <a href="#" class="card-btn">Ver Módulo</a>
+                    <p>Especialista en selección técnica mediante IA y automatización de ranking de talento.</p>
+                    <a href="#" class="card-btn">Lanzar Protocolo</a>
                 </div>
 
-                <!-- NAIPE DONNY SB -->
-                <div class="card" style="background: linear-gradient(180deg, #96e8da, #1abc9c);">
-                    <div class="card-image-placeholder">
-                        <img src="URL_DE_TU_IMAGEN_DONNY" alt="Donny SB">
-                    </div>
-                    <h2>Donny SB</h2>
-                    <p>Realidad Aumentada aplicada a la automatización del sector retail.</p>
-                    <a href="#" class="card-btn">Lanzar AR</a>
-                </div>
-
-                <!-- NAIPE SQORE -->
-                <div class="card" style="background: linear-gradient(180deg, #3498db, #2980b9);">
-                    <div class="card-image-placeholder">
-                        <img src="URL_DE_TU_IMAGEN_SQORE" alt="Sqore">
-                    </div>
-                    <h2>Sqore</h2>
-                    <p>Inteligencia de datos y scoring predictivo para toma de decisiones.</p>
-                    <a href="#" class="card-btn">Data View</a>
-                </div>
+                <!-- Las otras cartas seguirán el mismo formato con sus respectivos colores -->
             </div>
 
         </div>
