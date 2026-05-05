@@ -74,21 +74,20 @@
         }
 
         .card {
-            aspect-ratio: 2 / 3.2; /* Proporción de naipe para todas */
+            aspect-ratio: 2 / 3.2;
             border-radius: 25px;
             padding: 25px;
             display: flex;
             flex-direction: column;
             transition: 0.4s ease;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            background: #fdfdfd; /* Fondo neutro para las otras dos */
+            background: #fdfdfd;
             color: #333;
             border: 1px solid #eee;
         }
 
-        /* Solo la tarjeta de Irina con el degradado y texto blanco */
         .card-irina {
-            background: linear-gradient(-45deg, var(--pink-irina), var(--mint-irina));
+            background: linear-gradient(45deg, var(--pink-irina), var(--mint-irina));
             color: white;
             border: none;
             box-shadow: 0 10px 25px rgba(188, 138, 191, 0.3);
@@ -96,9 +95,10 @@
 
         .card:hover { transform: translateY(-10px); }
 
+        /* Contenedor Cuadrado */
         .card-image-placeholder {
             width: 100%;
-            height: 50%;
+            aspect-ratio: 1 / 1;
             background: rgba(0,0,0,0.05);
             border-radius: 18px;
             margin-bottom: 20px;
@@ -113,7 +113,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center top;
+            object-position: center 20%;
         }
 
         .card h2 {
@@ -150,7 +150,6 @@
 
     <div class="report-frame">
         <div class="report-content">
-            
             <header>
                 <div class="brand">
                     <h1>BlueLab</h1>
@@ -159,18 +158,16 @@
             </header>
 
             <div class="project-grid">
-                <!-- TARJETA IRINA (CON DEGRADADO) -->
                 <div class="card card-irina">
                     <div class="card-image-placeholder">
-                        <!-- URL de la imagen que me pases -->
-                        <img src="URL_IMGBB_AQUÍ" alt="Irina Hire">
+                        <!-- Pegá acá el link de IMGBB de la foto de Irina -->
+                        <img src="TU_URL_DE_IMGBB" alt="Irina Hire">
                     </div>
                     <h2>Irina Hire</h2>
                     <p>Especialista en selección técnica mediante IA y automatización de procesos de ranking.</p>
                     <a href="#" class="card-btn">Lanzar Protocolo</a>
                 </div>
 
-                <!-- TARJETA DONNY SB (NEUTRA) -->
                 <div class="card">
                     <div class="card-image-placeholder"></div>
                     <h2>Donny SB</h2>
@@ -178,7 +175,6 @@
                     <a href="#" class="card-btn" style="background:#eee; color:#666;">En Desarrollo</a>
                 </div>
 
-                <!-- TARJETA QORE (NEUTRA) -->
                 <div class="card">
                     <div class="card-image-placeholder"></div>
                     <h2>Sqore</h2>
@@ -186,9 +182,7 @@
                     <a href="#" class="card-btn" style="background:#eee; color:#666;">Ver Roadmap</a>
                 </div>
             </div>
-
         </div>
     </div>
-
 </body>
 </html>
