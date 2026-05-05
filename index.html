@@ -86,7 +86,6 @@
             border: 1px solid #eee;
         }
 
-        /* Tarjeta Irina con degradado de IZQUIERDA a DERECHA (45deg) */
         .card-irina {
             background: linear-gradient(45deg, var(--pink-irina), var(--mint-irina));
             color: white;
@@ -133,11 +132,17 @@
             font-weight: 700;
             text-transform: uppercase;
             text-align: center;
+            transition: 0.3s;
         }
 
         .card-irina .card-btn {
             background: white;
             color: var(--pink-irina);
+        }
+
+        .card-irina .card-btn:hover {
+            background: #f8f8f8;
+            transform: scale(1.02);
         }
     </style>
 </head>
@@ -156,11 +161,11 @@
                 <!-- TARJETA IRINA HIRE SELECTION -->
                 <div class="card card-irina">
                     <div class="card-image-placeholder">
-                        <img src="https://i.ibb.co/0pJRTvFV/cuadrada-para-blic-de-sitio-bluelab.jpg" alt="Irina Hire Selection">
+                        <img src="https://i.ibb.co/wNPN7GP4/cuadrada-para-blic-de-sitio-bluelab.jpg" alt="Irina Hire Selection">
                     </div>
                     <h2>Irina Hire</h2>
                     <p>Sistema de automatización y entrevista para validación de idoneidad eficiente en procesos de selección.</p>
-                    <a href="#" class="card-btn">Lanzar Protocolo</a>
+                    <a href="#" class="card-btn">SOLICITAR ACCESO</a>
                 </div>
 
                 <!-- OTRAS TARJETAS -->
@@ -168,14 +173,14 @@
                     <div class="card-image-placeholder"></div>
                     <h2>Donny SB</h2>
                     <p>Integración de Realidad Aumentada para la automatización de ofertas en el sector retail.</p>
-                    <a href="#" class="card-btn" style="background:#eee; color:#666;">En Desarrollo</a>
+                    <a href="#" class="card-btn" style="background:#eee; color:#666;">EN DESARROLLO</a>
                 </div>
 
                 <div class="card">
                     <div class="card-image-placeholder"></div>
                     <h2>Sqore</h2>
                     <p>Sistema de scoring predictivo para la optimización y análisis de idoneidad operativa.</p>
-                    <a href="#" class="card-btn" style="background:#eee; color:#666;">Ver Roadmap</a>
+                    <a href="#" class="card-btn" style="background:#eee; color:#666;">VER ROADMAP</a>
                 </div>
             </div>
         </div>
