@@ -10,8 +10,8 @@
             --pink-irina: #bc8abf;
             --mint-irina: #96e8da;
             --bg-dark: #05070a;
-            /* Color de fondo interno más claro para resaltar las tarjetas */
-            --bg-inner-light: #1c2533; 
+            /* Fondo interno aún más claro para mayor visibilidad */
+            --bg-inner-light: #2a3444; 
         }
 
         body {
@@ -36,12 +36,11 @@
             margin: 20px 0;
             padding: 1px;
             border-radius: 24px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
 
         .report-content {
-            /* Fondo interno ajustado a un tono más claro y visible */
             background: var(--bg-inner-light);
             backdrop-filter: blur(15px);
             border-radius: 23px;
@@ -52,17 +51,16 @@
         }
 
         header {
-            background: linear-gradient(120deg, rgba(10,14,23,0.9) 0%, rgba(28,37,51,0.9) 100%);
+            background: linear-gradient(120deg, rgba(10,14,23,0.95) 0%, rgba(42,52,68,0.95) 100%);
             padding: 60px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
         }
 
         .brand h1 {
             font-family: 'Alkatra', cursive;
             font-size: 4.5rem;
             margin: 0;
-            line-height: 1; /* Ajustado para evitar cortes */
+            line-height: 1;
             background: linear-gradient(to right, #fff 20%, var(--mint-irina) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -73,7 +71,7 @@
             letter-spacing: 6px;
             text-transform: uppercase;
             font-weight: 700;
-            opacity: 0.8;
+            opacity: 0.9;
             display: block;
             margin-top: 15px;
             color: #85c1e9;
@@ -86,43 +84,86 @@
             gap: 35px;
         }
 
+        /* --- EFECTO DE LUZ GIRATORIA --- */
         .card {
             aspect-ratio: 2 / 3.4;
             border-radius: 28px;
             padding: 28px;
             display: flex;
             flex-direction: column;
-            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             color: white;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            overflow: hidden; /* Importante para que la luz no se escape */
             border: 1px solid rgba(255,255,255,0.1);
-            overflow: hidden;
+            transition: 0.3s;
         }
 
-        .card:hover { 
-            transform: translateY(-12px);
-            border-color: rgba(255,255,255,0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        /* El "pincel" de luz que gira */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(transparent, transparent, transparent, white);
+            transform: translate(-50%, -50%);
+            animation: rotate 4s linear infinite;
+            display: none; /* Oculto por defecto */
+            z-index: 0;
+        }
+
+        /* Capa interna para que el contenido no se tape por la luz */
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 3px; /* Grosor del borde de luz */
+            background: inherit;
+            border-radius: 25px;
+            z-index: 1;
+        }
+
+        /* Mostrar luz al pasar el mouse */
+        .card:hover::before {
+            display: block;
+        }
+
+        .card:hover {
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Asegurar que el contenido esté arriba de los efectos */
+        .card-image-placeholder, .card h2, .card p, .btn-row {
+            position: relative;
+            z-index: 2;
         }
 
         .card-image-placeholder {
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.4);
             border-radius: 20px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 3.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .card-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
         .card h2 { margin: 0 0 12px 0; font-size: 1.8rem; font-family: 'Alkatra', cursive; }
-        .card p { font-size: 0.9rem; line-height: 1.5; flex-grow: 1; margin-bottom: 25px; opacity: 0.9; }
+        .card p { font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 25px; opacity: 1; }
 
-        .btn-row { display: flex; gap: 10px; width: 100%; height: 48px; /* Altura fija para control total */ }
+        .btn-row { display: flex; gap: 10px; width: 100%; height: 48px; }
 
         .card-btn {
             background: white;
@@ -131,41 +172,39 @@
             font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            /* Centrado perfecto con Flexbox */
             display: flex;
             align-items: center; 
             justify-content: center;
             transition: 0.3s;
             flex-grow: 1;
-            padding: 0 15px; /* Padding horizontal solamente */
         }
 
         .btn-video {
             width: 48px;
             flex-grow: 0;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.3);
             color: white;
             font-size: 1.1rem;
         }
 
-        .card-btn:hover { transform: scale(1.03); filter: brightness(1.1); }
+        .card-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        /* DEGRADADOS POR TARJETA */
-        .c-irina { background: linear-gradient(135deg, rgba(188, 138, 191, 0.9), rgba(150, 232, 218, 0.7)); }
+        /* DEGRADADOS PERSONALIZADOS */
+        .c-irina { background: linear-gradient(135deg, rgba(188, 138, 191, 1), rgba(150, 232, 218, 0.8)); }
         .c-irina .card-btn:not(.btn-video) { color: #bc8abf; }
 
-        .c-donny { background: linear-gradient(135deg, rgba(150, 232, 218, 0.9), rgba(255, 179, 71, 0.7)); }
+        .c-donny { background: linear-gradient(135deg, rgba(150, 232, 218, 1), rgba(255, 179, 71, 0.8)); }
         .c-donny .card-btn:not(.btn-video) { color: #e67e22; }
 
-        .c-qore { background: linear-gradient(135deg, rgba(255, 179, 71, 0.9), rgba(78, 82, 167, 0.7)); }
+        .c-qore { background: linear-gradient(135deg, rgba(255, 179, 71, 1), rgba(78, 82, 167, 0.8)); }
         .c-qore .card-btn:not(.btn-video) { color: #4e52a7; }
 
-        .c-companion { background: linear-gradient(135deg, rgba(78, 82, 167, 0.9), rgba(155, 89, 182, 0.7)); }
+        .c-companion { background: linear-gradient(135deg, rgba(78, 82, 167, 1), rgba(155, 89, 182, 0.8)); }
         .c-companion .card-btn:not(.btn-video) { color: #4e52a7; }
 
-        .c-pulse { background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(46, 204, 113, 0.7)); }
+        .c-pulse { background: linear-gradient(135deg, rgba(155, 89, 182, 1), rgba(46, 204, 113, 0.8)); }
         .c-pulse .card-btn:not(.btn-video) { color: #27ae60; }
     </style>
 </head>
@@ -176,6 +215,7 @@
                 <div class="brand"><h1>BlueLab</h1><span>Blueprint Integrations Lab</span></div>
             </header>
             <div class="project-grid">
+                <!-- Tarjeta 1 con video -->
                 <div class="card c-irina">
                     <div class="card-image-placeholder"><img src="https://i.ibb.co/wNPN7GP4/cuadrada-para-blic-de-sitio-bluelab.jpg"></div>
                     <h2>Irina Hire Selection</h2>
@@ -185,41 +225,18 @@
                         <a href="https://youtube.com/shorts/9UOam90EQP8" target="_blank" class="card-btn btn-video">▶</a>
                     </div>
                 </div>
+                <!-- Otras tarjetas -->
                 <div class="card c-donny">
                     <div class="card-image-placeholder"><img src="https://i.ibb.co/bjgN68bS/donny-sb-concept-v1.jpg"></div>
                     <h2>Donny SB</h2>
                     <p>Gestión avanzada de conocimiento y ecosistemas de aprendizaje personalizado.</p>
-                    <div class="btn-row">
-                        <a href="#" class="card-btn">EARLY ACCESS</a>
-                        <a href="#" class="card-btn btn-video">▶</a>
-                    </div>
+                    <div class="btn-row"><a href="#" class="card-btn">EARLY ACCESS</a><a href="#" class="card-btn btn-video">▶</a></div>
                 </div>
                 <div class="card c-qore">
                     <div class="card-image-placeholder">🌐</div>
                     <h2>Qore</h2>
                     <p>Centralización estratégica de recursos y conectividad en tiempo real para sectores retail.</p>
-                    <div class="btn-row">
-                        <a href="#" class="card-btn">DEVELOPMENT</a>
-                        <a href="#" class="card-btn btn-video">▶</a>
-                    </div>
-                </div>
-                <div class="card c-companion">
-                    <div class="card-image-placeholder">🛡️</div>
-                    <h2>Companion</h2>
-                    <p>Asistencia integral y acompañamiento preventivo mediante entornos digitales seguros.</p>
-                    <div class="btn-row">
-                        <a href="#" class="card-btn">CONCEPT</a>
-                        <a href="#" class="card-btn btn-video">▶</a>
-                    </div>
-                </div>
-                <div class="card c-pulse">
-                    <div class="card-image-placeholder">🌱</div>
-                    <h2>Pulse Insight</h2>
-                    <p>Análisis estratégico de cultura organizacional y canales de feedback dinámico.</p>
-                    <div class="btn-row">
-                        <a href="#" class="card-btn">CONCEPT</a>
-                        <a href="#" class="card-btn btn-video">▶</a>
-                    </div>
+                    <div class="btn-row"><a href="#" class="card-btn">DEVELOPMENT</a><a href="#" class="card-btn btn-video">▶</a></div>
                 </div>
             </div>
         </div>
