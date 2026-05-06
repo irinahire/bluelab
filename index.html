@@ -93,7 +93,7 @@
         .card-image-placeholder {
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.2);
             border-radius: 18px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -109,7 +109,6 @@
             margin: 0 0 10px 0;
             font-size: 1.8rem;
             font-family: 'Alkatra', cursive;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .card p {
@@ -131,32 +130,25 @@
             transition: 0.3s;
         }
 
-        .card-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* CADENA DE DEGRADADOS DISONANTES Y VIBRANTES */
-        
         /* 1. IRINA: Fucsia a Turquesa */
         .c-irina { background: linear-gradient(45deg, #bc8abf, #96e8da); }
         .c-irina .card-btn { color: #bc8abf; }
 
-        /* 2. DONNY: Turquesa a Naranja Vibrante */
-        .c-donny { background: linear-gradient(45deg, #96e8da, #ff8c00); }
-        .c-donny .card-btn { color: #ff8c00; }
+        /* 2. DONNY: Turquesa a Naranja */
+        .c-donny { background: linear-gradient(45deg, #96e8da, #ffb347); }
+        .c-donny .card-btn { color: #e67e22; }
 
-        /* 3. COMPANION: Naranja Vibrante a Azul Eléctrico */
-        .c-companion { background: linear-gradient(45deg, #ff8c00, #2979ff); }
-        .c-companion .card-btn { color: #2979ff; }
+        /* 3. COMPANION: Naranja a Azul Profundo (#4e52a7) */
+        .c-companion { background: linear-gradient(45deg, #ffb347, #4e52a7); }
+        .c-companion .card-btn { color: #4e52a7; }
 
-        /* 4. QORE: Azul Eléctrico a Violeta Intenso */
-        .c-qore { background: linear-gradient(45deg, #2979ff, #7b1fa2); }
-        .c-qore .card-btn { color: #7b1fa2; }
+        /* 4. QORE: Azul Profundo a Violeta */
+        .c-qore { background: linear-gradient(45deg, #4e52a7, #9b59b6); }
+        .c-qore .card-btn { color: #9b59b6; }
 
-        /* 5. PULSE: Violeta Intenso a Verde Lima */
-        .c-pulse { background: linear-gradient(45deg, #7b1fa2, #cddc39); }
-        .c-pulse .card-btn { color: #7b1fa2; }
+        /* 5. PULSE: Violeta a Verde */
+        .c-pulse { background: linear-gradient(45deg, #9b59b6, #2ecc71); }
+        .c-pulse .card-btn { color: #27ae60; }
 
     </style>
 </head>
@@ -172,7 +164,6 @@
             </header>
 
             <div class="project-grid">
-                <!-- 1. IRINA HIRE -->
                 <div class="card c-irina">
                     <div class="card-image-placeholder">
                         <img src="https://i.ibb.co/wNPN7GP4/cuadrada-para-blic-de-sitio-bluelab.jpg" alt="Irina Hire">
@@ -182,7 +173,6 @@
                     <a href="#" class="card-btn">AGENDAR CONSULTA</a>
                 </div>
 
-                <!-- 2. DONNY SB -->
                 <div class="card c-donny">
                     <div class="card-image-placeholder"></div>
                     <h2>Donny SB</h2>
@@ -190,7 +180,6 @@
                     <a href="#" class="card-btn">SOLICITAR DEMO</a>
                 </div>
 
-                <!-- 3. COMPANION -->
                 <div class="card c-companion">
                     <div class="card-image-placeholder"></div>
                     <h2>Companion</h2>
@@ -198,7 +187,6 @@
                     <a href="#" class="card-btn">VER PROTOCOLO</a>
                 </div>
 
-                <!-- 4. QORE -->
                 <div class="card c-qore">
                     <div class="card-image-placeholder"></div>
                     <h2>Qore</h2>
@@ -206,7 +194,6 @@
                     <a href="#" class="card-btn">EXPLORAR MAPA</a>
                 </div>
 
-                <!-- 5. PULSE INSIGHT -->
                 <div class="card c-pulse">
                     <div class="card-image-placeholder"></div>
                     <h2>Pulse Insight</h2>
