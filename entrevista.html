@@ -8,51 +8,65 @@
     <style>
         :root {
             --irina-gradient: linear-gradient(135deg, #96e8da 0%, #bc8abf 100%);
-            --bg-dark: #05070a;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-muted: rgba(255, 255, 255, 0.5);
+            /* El oscuro de la Index */
+            --bg-index: #05070a; 
+            /* Color de texto para fondo blanco */
+            --text-dark: #111827;
+            --text-gray: #64748b;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background: var(--bg-dark);
+            background: var(--bg-index);
             font-family: 'Inter', sans-serif;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--text-dark);
             overflow: hidden;
         }
 
-        /* MARCO COMPLETO CON DEGRADÉ */
+        /* 2 y 3. MARCO COMPLETO Y GRUESO CON DEGRADÉ */
         .outer-frame {
-            padding: 3px; /* El grosor del marco */
+            /* Grosor de los bordes aumentado */
+            padding: 6px; 
             background: var(--irina-gradient);
-            border-radius: 42px;
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
+            border-radius: 44px;
+            width: 95%;
+            max-width: 1100px;
+            height: 85vh;
             display: flex;
-            box-shadow: 0 0 50px rgba(150, 232, 218, 0.2);
+            box-shadow: 0 0 70px rgba(150, 232, 218, 0.3);
         }
 
         .app-container {
-            background: var(--bg-dark);
+            /* 1. FONDO BLANCO DENTRO DEL MARCO */
+            background: white; 
             width: 100%;
             height: 100%;
-            border-radius: 39px; /* Un poco menos que el outer para encajar */
+            border-radius: 40px; 
             display: flex;
             overflow: hidden;
             position: relative;
         }
 
+        /* 2. CABECERA MÁS GRUESA */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; /* Altura aumentada */
+            background: var(--irina-gradient);
+            z-index: 10;
+        }
+
         /* PANEL IZQUIERDO: TEXTO */
         .info-side {
             flex: 1.2;
-            padding: 50px;
+            padding: 100px 60px 60px 60px; /* Padding superior ajustado */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -60,21 +74,22 @@
         }
 
         .brand-title {
-            font-size: 44px;
+            font-size: 48px;
             font-weight: 800;
             background: var(--irina-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 0 0 20px 0;
+            margin: 0 0 25px 0;
             letter-spacing: -2px;
+            text-transform: uppercase;
         }
 
-        .section-box h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; color: #96e8da; }
-        .section-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; }
+        .section-box h3 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; color: var(--bg-index); font-weight: 700; }
+        .section-box p { font-size: 14px; color: var(--text-gray); margin-bottom: 30px; line-height: 1.6; }
 
         .checklist { list-style: none; padding: 0; margin: 0; }
-        .checklist li { font-size: 12px; margin-bottom: 10px; color: var(--text-muted); display: flex; align-items: center; }
-        .checklist b { color: white; margin-right: 5px; }
+        .checklist li { font-size: 13px; margin-bottom: 12px; color: var(--text-gray); display: flex; align-items: center; }
+        .checklist b { color: var(--text-dark); margin-right: 5px; }
 
         /* PANEL DERECHO: IRINA + DNI */
         .visual-side {
@@ -84,82 +99,83 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-left: 1px solid var(--glass-border);
-        }
-
-        .visual-side::after {
-            content: '';
-            position: absolute;
-            top:0; left:0; right:0; bottom:0;
-            background: linear-gradient(to right, var(--bg-dark) 0%, transparent 20%);
+            border-left: 1px solid #e5e7eb;
+            padding-top: 80px; /* Padding superior ajustado */
         }
 
         .dni-card {
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(15px);
-            padding: 30px;
-            border-radius: 20px;
-            width: 260px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 24px;
+            width: 280px;
             text-align: center;
             z-index: 10;
-            border: 1px solid var(--glass-border);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         input {
             width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            padding: 12px;
-            color: white;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            color: var(--text-dark);
             text-align: center;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 19px;
+            margin-bottom: 20px;
             outline: none;
+            box-sizing: border-box;
+            font-weight: 600;
         }
 
+        input:focus { border-color: #bc8abf; }
+
+        /* 4. EL BOTÓN QUE DISPARA LA LLAMADA */
         .btn-main {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             background: #22c55e;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             font-weight: 800;
+            font-size: 15px;
             cursor: pointer;
             transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
         }
+        .btn-main:hover { background: #16a34a; transform: translateY(-1px); }
 
-        /* SOPORTE TÉCNICO (Abajo Izquierda) */
+        /* SOPORTE TÉCNICO */
         .support-tag {
             position: absolute;
             bottom: 30px;
-            left: 50px;
-            font-size: 10px;
-            color: rgba(255,255,255,0.3);
+            left: 60px;
+            font-size: 11px;
+            color: #9ca3af;
             text-decoration: none;
-            transition: 0.3s;
+            z-index: 5;
         }
-        .support-tag:hover { color: #96e8da; }
+        .support-tag:hover { color: var(--bg-index); }
 
-        /* BOTÓN DE LLAMADA CUADRADO (Abajo Derecha) */
+        /* ÍCONO DE ESTADO CUADRADO */
         .btn-call-square {
             position: absolute;
             bottom: 30px;
             right: 30px;
-            width: 50px;
-            height: 50px;
-            background: var(--irina-gradient);
-            border-radius: 12px; /* Es cuadrado con esquinas redondeadas suaves */
+            width: 54px;
+            height: 54px;
+            background: #e5e7eb; /* Gris por defecto (inactivo) */
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
             z-index: 20;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
             transition: 0.3s;
         }
-        .btn-call-square:hover { transform: scale(1.1); }
 
     </style>
 </head>
@@ -167,6 +183,8 @@
 
     <div class="outer-frame">
         <div class="app-container">
+            
+            <div class="top-bar"></div>
             
             <div class="info-side">
                 <h1 class="brand-title">IRINA HIRE</h1>
@@ -188,19 +206,19 @@
                 </div>
 
                 <a href="mailto:soporte@bluelab.online" class="support-tag">
-                    SOPORTE TÉCNICO: soporte@bluelab.online
+                    Powered by Blueprint Integrations Lab
                 </a>
             </div>
 
             <div class="visual-side">
                 <div class="dni-card">
-                    <div style="font-size: 9px; letter-spacing: 2px; margin-bottom: 15px; opacity: 0.6;">DNI DEL POSTULANTE</div>
+                    <div style="font-size: 10px; letter-spacing: 2px; margin-bottom: 20px; color: var(--text-gray); font-weight: 700; text-transform: uppercase;">DNI DEL POSTULANTE</div>
                     <input type="text" id="dni-input" placeholder="00.000.000">
                     <button class="btn-main" onclick="startCall()">VALIDAR Y COMENZAR</button>
                 </div>
 
-                <div class="btn-call-square" onclick="startCall()">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                <div class="btn-call-square" id="status-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="#9ca3af">
                         <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z" />
                     </svg>
                 </div>
@@ -212,9 +230,19 @@
     <script>
         function startCall() {
             const btn = document.querySelector('.btn-main');
+            const statusIcon = document.getElementById('status-icon');
+            const phoneSvg = statusIcon.querySelector('svg');
+
+            // Lógica visual al hacer click
             btn.innerText = "CONECTANDO...";
-            btn.style.background = "#bc8abf";
-            // Aquí se dispara tu lógica de Vapi que ya tenemos probada
+            btn.style.background = "#bc8abf"; // Violeta Irina
+
+            // Aquí se dispara la lógica de Vapi
+            // Simulamos la conexión para ver el cambio de estado del icono cuadrado:
+            setTimeout(() => {
+                statusIcon.style.background = "var(--irina-gradient)"; // Activamos el icono cuadrado
+                phoneSvg.style.fill = "white"; // Cambiamos el color del icono
+            }, 1500);
         }
     </script>
 </body>
