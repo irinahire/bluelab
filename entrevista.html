@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrevista | Irina Hire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #05070a; /* El fondo oscuro de BlueLab */
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Tu contenedor forzado al tope */
+        #irina-fixed-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            padding-top: 80px; /* Un poco más de espacio */
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="irina-fixed-container">
+      <div id="dni-box" style="background:#ffffff; border-radius:20px; padding:30px; box-shadow:0 20px 40px rgba(0,0,0,0.3); width:100%; max-width:320px; border:1px solid #eee; text-align:center; pointer-events: auto;">
+        
+        <div style="font-size:11px; font-weight:800; letter-spacing:1.5px; opacity:0.4; margin-bottom:15px; color:#111; text-transform:uppercase;">
+          VALIDACIÓN DE POSTULANTE
+        </div>
+
+        <input id="dni-input-center" placeholder="Ingresá tu DNI" inputmode="numeric"
+          style="width:100%; padding:15px; border:2px solid #f3f3f3; border-radius:14px; font-size:18px; box-sizing:border-box; outline:none; text-align:center; background:#f9f9f9;">
+        
+        <div id="dni-err-center" style="font-size:12px; color:#ef4444; margin-top:10px; display:none; font-weight:600;">
+          ⚠️ DNI no válido
+        </div>
+
+        <button id="call-irina-center" style="width:100%; height:56px; border-radius:14px; border:0; background:#22c55e; color:#fff;
+          font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 10px 25px rgba(34,197,94,0.3); margin-top:20px;">
+          VALIDAR Y COMENZAR
+        </button>
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
+      var ASST = "183129be-11c6-479d-87d3-bc390c593600";
+      var VAR_NAME = "customer_dni";
+
+      function loadVapi(){
+        if(window.vapiSDK) return Promise.resolve();
+        return new Promise(function(res){
+          var s=document.createElement("script");
+          s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+          s.async=true; s.onload=res;
+          document.head.appendChild(s);
+        });
+      }
+
+      setTimeout(function(){
+        var btn = document.getElementById("call-irina-center");
+        var input = document.getElementById("dni-input-center");
+        var err = document.getElementById("dni-err-center");
+
+        console.log("🚀 [v12.4] Sistema listo para conectar.");
+
+        btn.onclick = function(){
+          var v = (input.value || "").replace(/\D/g, "");
+          if(v.length < 6){ err.style.display="block"; return; }
+          
+          err.style.display="none";
+          btn.innerText = "CONECTANDO...";
+          btn.style.background = "#bc8abf"; // Cambia a un color de proceso (Violeta Irina)
+
+          loadVapi().then(function(){
+            window.vapiSDK.run({ 
+              apiKey: KEY, 
+              assistant: ASST,
+              assistantOverrides: { variableValues: { [VAR_NAME]: v } }
+            });
+            
+            // Listener para cuando la llamada conecte
+            window.vapiSDK.on('call-start', () => {
+                btn.innerText = "EN LLAMADA...";
+                btn.style.background = "#ef4444"; // Rojo para indicar que está ocupado/graba
+            });
+
+            window.vapiSDK.on('call-end', () => {
+                btn.innerText = "ENTREVISTA FINALIZADA";
+                btn.style.background = "#22c55e";
+            });
+          });
+        };
+      }, 1000);
+    })();
+    </script>
+</body>
+</html>
