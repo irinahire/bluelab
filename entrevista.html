@@ -7,7 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --irina-gradient: linear-gradient(to right, #96e8da 0%, #bc8abf 100%);
+            /* DEGRADÉ INVERTIDO: Fucsia a la izquierda, Turquesa a la derecha */
+            --irina-gradient: linear-gradient(to right, #bc8abf 0%, #96e8da 100%);
             --fucsia-solid: #bc8abf;
             --bg-dark: #05070a;
             --text-dark: #111827;
@@ -23,6 +24,7 @@
             overflow: hidden;
         }
 
+        /* MARCO CON DEGRADÉ INVERTIDO */
         .outer-frame {
             padding: 10px;
             background: var(--irina-gradient);
@@ -30,6 +32,7 @@
             width: 92%; max-width: 1150px;
             height: 85vh;
             display: flex;
+            position: relative;
         }
 
         .app-container {
@@ -37,36 +40,42 @@
             width: 100%; height: 100%;
             border-radius: 40px;
             display: flex; flex-direction: column;
-            overflow: hidden;
             position: relative;
+            /* Quitamos overflow hidden para que la tarjeta no se corte */
         }
 
+        /* VINCHA CON DEGRADÉ INVERTIDO */
         .top-vincha {
             width: 100%; height: 80px;
             background: var(--irina-gradient);
             display: flex; align-items: center; justify-content: flex-end;
             padding: 0 40px; box-sizing: border-box;
             z-index: 20;
+            border-radius: 40px 40px 0 0;
         }
 
         .vincha-title {
-            font-weight: 800;
-            font-size: 28px;
+            font-weight: 800; font-size: 28px;
             text-transform: uppercase;
             background: white;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-image: var(--irina-gradient);
-            /* BORDE BLANCO DEFINIDO */
-            filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white);
+            /* BORDE BLANCO PARA RESALTAR */
+            filter: drop-shadow(1.5px 0 0 white) drop-shadow(-1.5px 0 0 white) drop-shadow(0 1.5px 0 white) drop-shadow(0 -1.5px 0 white);
         }
 
-        .main-body { flex: 1; display: flex; position: relative; }
+        .main-body { 
+            flex: 1; display: flex; 
+            position: relative; 
+            border-radius: 0 0 40px 40px;
+            overflow: hidden; /* Esto mantiene a Irina dentro de su panel */
+        }
 
         .info-side {
             flex: 1.2; padding: 50px 60px;
             display: flex; flex-direction: column;
-            justify-content: center; z-index: 5;
+            justify-content: center;
         }
 
         .section-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--text-dark); border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; display: inline-block; }
@@ -77,27 +86,27 @@
             flex: 1; position: relative;
             background: #fdfdfd;
             border-left: 1px solid #f3f4f6;
-            overflow: hidden;
         }
 
         .irina-bg {
             position: absolute; 
             top: 0; right: 0;
             height: 100%; width: auto;
-            object-fit: cover; z-index: 1;
+            object-fit: cover;
         }
 
-        /* TARJETA DNI RE-UBICADA PARA NO TAPAR LA CARA */
+        /* TARJETA DNI: Ahora con z-index alto para que no se corte */
         .dni-card {
             background: white;
             padding: 35px; border-radius: 25px;
             width: 300px; text-align: center;
-            z-index: 15; border: 1px solid #e5e7eb;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+            z-index: 99; /* Máxima prioridad */
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
             position: absolute;
-            top: 50%; /* Centrado vertical exacto */
-            left: 0; /* Lo movemos al límite entre las dos columnas */
-            transform: translate(-50%, -50%); /* Ajuste fino de centrado */
+            top: 50%; 
+            left: 50%; /* Centrado absoluto respecto al contenedor principal */
+            transform: translate(-50%, -50%);
         }
 
         #dni-input-center {
@@ -109,9 +118,7 @@
             outline: none;
         }
 
-        #dni-err-center {
-            font-size: 12px; color: #ef4444; margin-bottom: 15px; font-weight: 600;
-        }
+        #dni-err-center { font-size: 12px; color: #ef4444; margin-bottom: 15px; font-weight: 600; }
 
         #call-irina-center {
             width: 100%; height: 58px;
@@ -120,14 +127,12 @@
             font-weight: 800; cursor: pointer;
             text-transform: uppercase;
             box-shadow: 0 10px 25px rgba(188, 138, 191, 0.35);
-            transition: transform 0.2s;
         }
-
-        #call-irina-center:active { transform: scale(0.98); }
 
         .footer-info {
             position: absolute; bottom: 25px; left: 60px;
             font-size: 10px; color: #9ca3af; font-weight: 600;
+            z-index: 5;
         }
     </style>
 </head>
@@ -135,6 +140,13 @@
 
     <div class="outer-frame">
         <div class="app-container">
+            <div class="dni-card">
+                <div style="font-size:10px; font-weight:800; color:#9ca3af; margin-bottom:15px; letter-spacing:1px;">VALIDACIÓN DE POSTULANTE</div>
+                <input id="dni-input-center" placeholder="DNI del Postulante" inputmode="numeric">
+                <div id="dni-err-center" style="display:none;">⚠️ DNI no válido</div>
+                <button id="call-irina-center">VALIDAR Y COMENZAR</button>
+            </div>
+
             <div class="top-vincha">
                 <div class="vincha-title">Irina Hire</div>
             </div>
@@ -148,25 +160,15 @@
                             <li>🤫 <b>Entorno:</b> Espacio privado y libre de ruidos.</li>
                             <li>⚖️ <b>Legal:</b> Al iniciar acepta términos y condiciones.</li>
                         </ul>
-                        <p style="font-size: 10px; color: #9ca3af; margin-top: 30px; font-weight: 600; max-width: 300px;">
-                            Portal oficial de evaluación de Blueprint Integrations Lab. La inteligencia artificial validará su perfil.
-                        </p>
                     </div>
                 </div>
 
                 <div class="visual-side">
                     <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-bg">
-                    
-                    <div class="dni-card">
-                        <div style="font-size:10px; font-weight:800; color:#9ca3af; margin-bottom:15px; letter-spacing:1px;">VALIDACIÓN DE POSTULANTE</div>
-                        <input id="dni-input-center" placeholder="DNI del Postulante" inputmode="numeric">
-                        <div id="dni-err-center" style="display:none;">⚠️ DNI no válido</div>
-                        <button id="call-irina-center">VALIDAR Y COMENZAR</button>
-                    </div>
                 </div>
             </div>
 
-            <div class="footer-info">SOPORTE: soporte@bluelab.online | POWERED BY BLUE LAB</div>
+            <div class="footer-info">POWERED BY BLUE LAB</div>
         </div>
     </div>
 
@@ -194,14 +196,11 @@
         btn.onclick = function(){
           var v = (input.value || "").replace(/\D/g, "");
           if(v.length < 6){ err.style.display="block"; return; }
-          
           err.style.display="none";
           btn.innerText = "CONECTANDO...";
-
           loadVapi().then(function(){
             window.vapiSDK.run({ 
-              apiKey: KEY, 
-              assistant: ASST,
+              apiKey: KEY, assistant: ASST,
               assistantOverrides: { variableValues: { [VAR_NAME]: v } }
             });
           });
