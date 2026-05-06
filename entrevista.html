@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* DEGRADÉ INVERTIDO: Fucsia a la izquierda, Turquesa a la derecha */
             --irina-gradient: linear-gradient(to right, #bc8abf 0%, #96e8da 100%);
             --fucsia-solid: #bc8abf;
             --bg-dark: #05070a;
@@ -24,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* MARCO CON DEGRADÉ INVERTIDO */
         .outer-frame {
             padding: 10px;
             background: var(--irina-gradient);
@@ -41,27 +39,48 @@
             border-radius: 40px;
             display: flex; flex-direction: column;
             position: relative;
-            /* Quitamos overflow hidden para que la tarjeta no se corte */
         }
 
-        /* VINCHA CON DEGRADÉ INVERTIDO */
+        /* VINCHA ACTUALIZADA: DISTRIBUCIÓN IZQUIERDA Y DERECHA */
         .top-vincha {
             width: 100%; height: 80px;
             background: var(--irina-gradient);
-            display: flex; align-items: center; justify-content: flex-end;
+            display: flex; align-items: center; 
+            justify-content: space-between; /* Uno a cada punta */
             padding: 0 40px; box-sizing: border-box;
             z-index: 20;
             border-radius: 40px 40px 0 0;
         }
 
+        /* ESTILO LOGO IZQUIERDA */
+        .brand-left {
+            display: flex;
+            flex-direction: column;
+            color: white;
+            line-height: 1;
+        }
+        .blue-lab-text {
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+        .blueprint-subtext {
+            font-weight: 400;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            opacity: 0.9;
+        }
+
+        /* ESTILO TÍTULO DERECHA */
         .vincha-title {
-            font-weight: 800; font-size: 28px;
+            font-weight: 800; font-size: 24px;
             text-transform: uppercase;
             background: white;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-image: var(--irina-gradient);
-            /* BORDE BLANCO PARA RESALTAR */
             filter: drop-shadow(1.5px 0 0 white) drop-shadow(-1.5px 0 0 white) drop-shadow(0 1.5px 0 white) drop-shadow(0 -1.5px 0 white);
         }
 
@@ -69,7 +88,7 @@
             flex: 1; display: flex; 
             position: relative; 
             border-radius: 0 0 40px 40px;
-            overflow: hidden; /* Esto mantiene a Irina dentro de su panel */
+            overflow: hidden;
         }
 
         .info-side {
@@ -95,17 +114,16 @@
             object-fit: cover;
         }
 
-        /* TARJETA DNI: Ahora con z-index alto para que no se corte */
         .dni-card {
             background: white;
             padding: 35px; border-radius: 25px;
             width: 300px; text-align: center;
-            z-index: 99; /* Máxima prioridad */
+            z-index: 99;
             border: 1px solid #e5e7eb;
             box-shadow: 0 30px 60px rgba(0,0,0,0.15);
             position: absolute;
             top: 50%; 
-            left: 50%; /* Centrado absoluto respecto al contenedor principal */
+            left: 50%;
             transform: translate(-50%, -50%);
         }
 
@@ -135,41 +153,34 @@
             z-index: 5;
         }
 
-
         /* --- ESTILO PARA TRANSFORMAR EL BOTÓN VERDE DE VAPI --- */
+        .vapi-btn {
+            border-radius: 14px !important; 
+            width: 280px !important; 
+            height: 60px !important;
+            background: var(--irina-gradient) !important;
+            position: fixed !important;
+            bottom: 5vh !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            box-shadow: 0 15px 35px rgba(188, 138, 191, 0.4) !important;
+            transition: all 0.3s ease-in-out !important;
+            z-index: 999999 !important;
+        }
 
-/* 1. Seleccionamos el botón que crea el script */
-.vapi-btn {
-    /* Quitamos el círculo y lo hacemos rectangular */
-    border-radius: 14px !important; 
-    width: 280px !important; 
-    height: 60px !important;
-    
-    /* Aplicamos tu branding (Fucsia a Turquesa) */
-    background: linear-gradient(to right, #bc8abf, #96e8da) !important;
-    
-    /* Lo posicionamos flotando abajo al centro */
-    position: fixed !important;
-    bottom: 5vh !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    
-    /* Estética de la sombra */
-    box-shadow: 0 15px 35px rgba(188, 138, 191, 0.4) !important;
-    
-    /* Animación para que no aparezca de golpe */
-    transition: all 0.3s ease-in-out !important;
-    
-    /* Importante: para que se vea sobre todo lo demás */
-    z-index: 999999 !important;
-}
+        /* FUNCIONALIDAD DE RAYO DE LUZ AL PASAR EL MOUSE (HOVER) */
+        .vapi-btn:hover {
+            box-shadow: 
+                0 15px 35px rgba(188, 138, 191, 0.4), 
+                0 0 20px 5px rgba(150, 232, 218, 0.7) !important; /* Rayo de luz turquesa/fucsia */
+            transform: translateX(-50%) scale(1.02) !important;
+        }
 
-/* Opcional: Cambiamos el color del icono dentro del botón si es necesario */
-.vapi-btn svg {
-    fill: white !important;
-    width: 25px !important;
-    height: 25px !important;
-}
+        .vapi-btn svg {
+            fill: white !important;
+            width: 25px !important;
+            height: 25px !important;
+        }
     </style>
 </head>
 <body>
@@ -184,7 +195,11 @@
             </div>
 
             <div class="top-vincha">
-                <div class="vincha-title">Irina Hire</div>
+                <div class="brand-left">
+                    <span class="blue-lab-text">BLUE LAB</span>
+                    <span class="blueprint-subtext">Blueprint Integrations Lab</span>
+                </div>
+                <div class="vincha-title">Irina Hire Selection</div>
             </div>
 
             <div class="main-body">
