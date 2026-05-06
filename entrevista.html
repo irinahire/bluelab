@@ -7,14 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Degradado Oficial de Irina */
             --irina-gradient: linear-gradient(135deg, #96e8da 0%, #bc8abf 100%);
-            /* Verde "Iniciar Llamada" */
             --irina-green: #10b981; 
-            /* El oscuro de fondo (de la index) */
             --bg-dark: #05070a;
             --text-dark: #111827;
-            --text-gray: #6b7280;
+            --text-gray: #4b5563;
         }
 
         body {
@@ -24,150 +21,151 @@
             height: 100vh;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
-            color: white;
         }
 
-        /* EL MARCO CONTENEDOR (Borde degradé) */
         .app-frame {
-            width: 90%;
-            max-width: 1100px;
-            height: 80vh;
-            border-radius: 40px;
-            padding: 4px; /* Grosor del borde */
+            width: 92%; max-width: 1150px;
+            height: 85vh;
+            border-radius: 50px;
+            padding: 8px; 
             background: var(--irina-gradient);
             display: flex;
             box-shadow: 0 40px 100px rgba(150, 232, 218, 0.2);
-            overflow: hidden;
         }
 
         .app-container {
-            background: white; /* Fondo blanco interno */
+            background: white;
             width: 100%; height: 100%;
-            border-radius: 36px;
+            border-radius: 42px;
             display: flex;
-            overflow: hidden;
             position: relative;
         }
 
-        /* CABECERA TRANSPARENTE (PARA NO TAPAR A IRINA) */
+        /* HEADER CON LOGO */
         .top-header {
             position: absolute;
-            top: 30px;
-            left: 50px;
+            top: 40px;
+            left: 60px;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .irina-logo {
-            font-size: 28px;
-            font-weight: 800;
-            background: var(--irina-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-            text-transform: uppercase;
+        .logo-img {
+            height: 45px; /* Ajustá según el tamaño de tu logo */
+            width: auto;
         }
 
-        /* PANEL IZQUIERDO: TEXTO */
+        /* PANEL IZQUIERDO: CONTENIDO */
         .panel-info {
-            flex: 1.1;
-            padding: 120px 60px 60px 60px; /* Padding superior para el logo */
+            flex: 1.2;
+            padding: 130px 80px 60px 80px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             color: var(--text-dark);
         }
 
-        .panel-info h2 { font-size: 16px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--irina-green); margin-bottom: 10px; }
-        .panel-info p { font-size: 14px; color: var(--text-gray); margin-bottom: 30px; line-height: 1.6; }
+        .panel-info h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #bc8abf; margin-bottom: 15px; font-weight: 800; }
+        .panel-info p { font-size: 14px; color: var(--text-gray); margin-bottom: 30px; line-height: 1.7; }
 
-        .checklist li { font-size: 13px; color: var(--text-gray); margin-bottom: 10px; }
-        .checklist b { color: var(--text-dark); }
+        .checklist { list-style: none; padding: 0; margin: 0 0 40px 0; }
+        .checklist li { 
+            font-size: 13px; 
+            color: var(--text-dark); 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            font-weight: 500;
+        }
 
-        /* PANEL DERECHO: IRINA + DNI (Inmersivo) */
+        .legal-notice {
+            font-size: 11px;
+            color: #9ca3af;
+            line-height: 1.5;
+            margin-top: auto;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 20px;
+        }
+
+        /* PANEL DERECHO: VISUAL */
         .panel-visual {
             flex: 1;
-            background-color: #f9fafb; /* Fondo sutil para la oficina */
             position: relative;
+            background: #fdfdfd;
+            border-left: 1px solid #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-left: 1px solid #f3f4f6;
         }
 
-        /* IMAGEN DE IRINA COMPLETA (NO RECORTADA) */
         .irina-img {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            height: 100%; /* Ocupa todo el alto */
-            object-fit: contain; /* SE VE COMPLETA, SIN CORTAR LA CABEZA */
+            bottom: 0; right: 0;
+            height: 100%;
+            object-fit: contain;
             object-position: bottom right;
             z-index: 1;
+            /* Filtro sutil para que no compita con el DNI */
+            filter: drop-shadow(-20px 0 50px rgba(0,0,0,0.05));
         }
 
-        /* TARJETA DE DNI MODERNA */
         .dni-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 35px;
-            border-radius: 24px;
-            width: 290px;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            width: 300px;
             z-index: 10;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         input {
             width: 100%;
-            background: white;
+            background: #f9fafb;
             border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 18px;
-            color: var(--text-dark);
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 22px;
             text-align: center;
-            font-size: 20px;
             margin-bottom: 25px;
             outline: none;
+            font-weight: 800;
             box-sizing: border-box;
-            font-weight: 700;
+            transition: 0.3s;
         }
+        input:focus { border-color: #96e8da; background: white; }
 
-        input:focus { border-color: #bc8abf; }
-
-        /* EL BOTÓN FINAL (FIJO, XL Y 100% CLIQUEABLE) */
         .btn-action {
             width: 100%;
-            height: 60px; /* MÁS ALTO Y ROBUSTO */
-            background: var(--irina-green); /* Degradado al conectar */
+            height: 70px; /* ALTO REFORZADO */
+            background: var(--irina-green);
             color: white;
             border: none;
-            border-radius: 14px;
-            font-size: 16px;
+            border-radius: 18px;
+            font-size: 17px;
             font-weight: 800;
             cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
-            /* ÁREA DE CLIC TOTAL */
             display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+            /* ELIMINAMOS MOVIMIENTO */
         }
+        .btn-action:hover { background: #059669; }
 
-        .btn-action:hover {
-            background: #059669; /* Verde más oscuro sin moverse */
-        }
-
-        /* MAIL DE SOPORTE (Abajo Izquierda) */
-        .support-footer {
+        .support-link {
             position: absolute;
-            bottom: 30px;
-            left: 60px;
-            font-size: 11px;
-            color: #9ca3af;
-            z-index: 5;
+            bottom: 40px;
+            left: 80px;
+            font-size: 10px;
+            color: #d1d5db;
             text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
-        .support-footer:hover { color: var(--text-dark); }
-
     </style>
 </head>
 <body>
@@ -176,48 +174,48 @@
         <div class="app-container">
             
             <div class="top-header">
-                <div class="irina-logo">IRINA HIRE</div>
+                <img src="URL_DEL_LOGO_AQUÍ" class="logo-img" alt="Irina Logo">
             </div>
 
-            <div class="info-side">
-                <div class="panel-info">
-                    <h2>Protocolo de Acceso</h2>
-                    <p>Al presionar Iniciar Llamada, usted acepta los Términos y Condiciones y la Política de Privacidad de Irina Hire Selection.</p>
-
-                    <h2>Checklist de Validación</h2>
-                    <ul style="list-style:none; padding:0;" class="checklist">
-                        <li>🎧 <b>Headset:</b> Para nitidez de audio.</li>
-                        <li>💡 <b>Luz:</b> El sistema valida rasgos biométricos.</li>
-                        <li>🤫 <b>Silencio:</b> Ambiente libre de interrupciones.</li>
-                        <li>👤 <b>Privacidad:</b> Debe estar solo en la sala.</li>
-                    </ul>
-                </div>
+            <div class="panel-info">
+                <h2>Requerimientos de Entrevista</h2>
+                <p>Para asegurar una evaluación precisa por parte de nuestra IA, por favor verifique su entorno antes de comenzar:</p>
                 
-                <a href="mailto:soporte@bluelab.online" class="support-footer">
-                    SOPORTE TÉCNICO: soporte@bluelab.online
-                </a>
+                <ul class="checklist">
+                    <li>🎧 <b>Uso de Headset:</b> Obligatorio para una cancelación de eco óptima.</li>
+                    <li>💡 <b>Iluminación Frontal:</b> Su rostro debe estar claramente visible.</li>
+                    <li>🤫 <b>Espacio Privado:</b> Evite ruidos de fondo o presencia de terceros.</li>
+                    <li>🌐 <b>Conexión Estable:</b> Se recomienda una señal Wi-Fi fuerte o cableada.</li>
+                </ul>
+
+                <div class="legal-notice">
+                    Al hacer clic en "Validar y Comenzar", usted confirma que es mayor de edad y acepta de conformidad nuestros <b>Términos de Servicio</b> y la <b>Política de Tratamiento de Datos Biométricos</b> de Blueprint Integrations Lab.
+                </div>
             </div>
 
             <div class="panel-visual">
                 <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-img" alt="Irina">
 
                 <div class="dni-card">
-                    <div style="font-size: 10px; letter-spacing: 2px; margin-bottom: 20px; color: var(--text-gray); font-weight: 700; text-transform: uppercase;">DNI DEL POSTULANTE</div>
+                    <div style="font-size: 11px; font-weight: 800; color: #9ca3af; margin-bottom: 20px; letter-spacing: 1px;">INGRESE SU IDENTIDAD</div>
                     <input type="text" id="dni-input" placeholder="00.000.000">
-                    <button class="btn-action" onclick="startCall()">VALIDAR Y COMENZAR</button>
+                    <button class="btn-action" onclick="validar()">VALIDAR Y COMENZAR</button>
                 </div>
             </div>
+
+            <a href="mailto:soporte@bluelab.online" class="support-link">
+                POWERED BY BLUEPRINT INTEGRATIONS LABS | BLUE LAB
+            </a>
 
         </div>
     </div>
 
     <script>
-        // Mantenemos la lógica de Vapi que ya tenemos probada
-        function startCall() {
+        function validar() {
             const btn = document.querySelector('.btn-action');
-            btn.innerText = "CONECTANDO...";
-            btn.style.background = "#bc8abf"; // Violeta Irina al conectar
-            // Tu lógica de conexión real aquí...
+            btn.innerText = "CONECTANDO CON IRINA...";
+            btn.style.background = "#bc8abf";
+            // Aquí va tu lógica de Vapi
         }
     </script>
 </body>
