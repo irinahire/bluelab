@@ -41,7 +41,7 @@
             position: relative;
         }
 
-        /* VINCHA SUPERIOR (Solo Decorativa ahora) */
+        /* VINCHA SUPERIOR */
         .top-vincha {
             width: 100%; height: 60px;
             background: var(--irina-gradient);
@@ -57,15 +57,14 @@
             justify-content: flex-start; z-index: 5;
         }
 
-        /* LOGO EN LA PARTE BLANCA */
-        .logo-container { margin-bottom: 30px; }
+        .logo-container { margin-bottom: 25px; }
         .logo-ihs { height: 60px; width: auto; }
 
         .brand-title {
             font-size: 36px; font-weight: 800;
             background: var(--irina-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
         }
 
         /* PANEL DERECHO */
@@ -81,14 +80,13 @@
             height: 100%; object-fit: contain; z-index: 1;
         }
 
-        /* TARJETA DNI */
+        /* TARJETA CENTRAL */
         .dni-card {
             background: rgba(255, 255, 255, 0.98);
             padding: 35px; border-radius: 30px;
-            width: 290px; text-align: center;
+            width: 300px; text-align: center;
             z-index: 10; border: 1px solid #e5e7eb;
             box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-            position: relative;
         }
 
         input {
@@ -99,19 +97,30 @@
             box-sizing: border-box; background: #f9fafb;
         }
 
-        /* BOTÓN CON DEGRADÉ (Recuperado y mejorado) */
+        /* EL BOTÓN REFORMADO (Antes era el verde redondo) */
         #call-irina-btn {
-            width: 100%; height: 70px; /* Más alto y ancho */
+            width: 100%; 
+            height: 75px; /* BIEN GRANDE */
             background: var(--irina-gradient);
-            border: none; border-radius: 16px;
-            color: white; font-weight: 800;
-            font-size: 16px; cursor: pointer;
+            border: none; 
+            border-radius: 18px;
+            color: white; 
+            font-weight: 800;
+            font-size: 16px; 
+            cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: opacity 0.3s;
+            box-shadow: 0 10px 25px rgba(188, 138, 191, 0.4);
+            transition: opacity 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        #call-irina-btn:hover { opacity: 0.9; }
+        #call-irina-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.01);
+        }
 
         .footer-info {
             position: absolute; bottom: 25px; left: 60px;
@@ -130,26 +139,24 @@
                     <div class="logo-container">
                         <img src="https://i.ibb.co/JFMJBm0S/logo-ihs.jpg" class="logo-ihs" alt="Logo IHS">
                     </div>
-
                     <h1 class="brand-title">IRINA HIRE</h1>
-                    <div style="margin-bottom:25px">
-                        <p style="font-size:14px; color:var(--text-gray); line-height:1.6">
-                            Portal oficial de evaluación de <b>Blueprint Integrations Lab</b>.
-                        </p>
-                    </div>
+                    <p style="font-size:14px; color:var(--text-gray); line-height:1.6; margin-bottom:20px;">
+                        Portal de evaluación inteligente de <b>Blueprint Integrations Lab</b>.
+                    </p>
                     <ul style="list-style:none; padding:0; font-size:12px; color:var(--text-dark)">
-                        <li style="margin-bottom:12px">🎧 <b>Audio:</b> Use headset para mayor nitidez.</li>
-                        <li style="margin-bottom:12px">👤 <b>Entorno:</b> Espacio privado y sin ruidos.</li>
-                        <li style="margin-bottom:12px">⚖️ <b>Legal:</b> Al iniciar acepta términos de servicio.</li>
+                        <li style="margin-bottom:10px">🎧 <b>Audio:</b> Use headset para mayor nitidez.</li>
+                        <li style="margin-bottom:10px">💡 <b>Luz:</b> Rostro visible para validación biométrica.</li>
+                        <li style="margin-bottom:10px">⚖️ <b>Legal:</b> Al iniciar acepta términos de servicio.</li>
                     </ul>
                 </div>
 
                 <div class="visual-side">
                     <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-bg">
                     <div class="dni-card">
-                        <div style="font-size:11px; font-weight:800; color:#9ca3af; margin-bottom:20px; letter-spacing:1px">DNI DEL POSTULANTE</div>
+                        <div style="font-size:11px; font-weight:800; color:#9ca3af; margin-bottom:20px; letter-spacing:1px">VALIDACIÓN DE IDENTIDAD</div>
                         <input type="text" id="dni-input" placeholder="00.000.000">
-                        <button id="call-irina-btn">VALIDAR Y COMENZAR</button>
+                        
+                        <button id="call-irina-btn">INICIAR ENTREVISTA VIRTUAL</button>
                     </div>
                 </div>
             </div>
