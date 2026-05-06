@@ -16,53 +16,12 @@
             margin: 0; padding: 0;
             background-color: var(--bg-dark);
             font-family: 'Inter', sans-serif;
-            color: white;
+            display: flex; justify-content: center;
+            min-height: 100vh; color: white;
             background-image: radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px);
             background-size: 100px 100px;
-            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* --- BANNER SUPERIOR ALINEADO A LA IZQUIERDA --- */
-        .top-banner {
-            width: 100%;
-            height: 90px;
-            background: rgba(10, 14, 23, 0.85);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding-left: 40px; /* Alineación a la izquierda */
-        }
-
-        .banner-content {
-            display: flex;
-            flex-direction: column; /* Nombre arriba, lab abajo */
-            justify-content: center;
-        }
-
-        .logo-text {
-            font-family: 'Alkatra', cursive;
-            font-size: 2.2rem;
-            line-height: 1;
-            background: linear-gradient(to right, #fff, var(--mint-irina));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-
-        .tagline {
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #85c1e9;
-            font-weight: 700;
-            margin-top: 4px;
-        }
-
-        /* --- CONTENEDOR DE TARJETAS --- */
         .report-frame {
             width: 95%; max-width: 1300px; margin: 40px 0; padding: 1px;
             border-radius: 30px; background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
@@ -76,12 +35,30 @@
             border-radius: 29px; min-height: 100%; display: flex; flex-direction: column;
         }
 
+        /* Cabecera original con alineación de texto a la izquierda */
+        header {
+            padding: 70px 60px; /* Recuperamos el padding lateral */
+            text-align: left; /* Alineado a la izquierda como querías */
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand h1 {
+            font-family: 'Alkatra', cursive; font-size: 5.5rem; margin: 0;
+            background: linear-gradient(to right, #fff, var(--mint-irina));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .brand span {
+            font-size: 1.1rem; letter-spacing: 8px; text-transform: uppercase;
+            font-weight: 700; color: #85c1e9; display: block; margin-top: 10px;
+        }
+
         .project-grid {
             padding: 60px; display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px;
         }
 
-        /* --- EFECTO DOBLE RAYO --- */
         .card {
             border-radius: 24px; padding: 2px;
             position: relative; overflow: hidden;
@@ -96,6 +73,7 @@
             transform: translate(-50%, -50%);
             animation: rotate 4s linear infinite; display: none; z-index: 0;
         }
+
         .card::after { animation-delay: -2s; }
         .card:hover::before, .card:hover::after { display: block; }
 
@@ -127,7 +105,6 @@
 
         .btn-row { display: flex; gap: 10px; height: 48px; width: 100%; }
 
-        /* BOTÓN LIMPIO */
         .card-btn {
             background: white; border-radius: 12px; text-decoration: none;
             font-size: 0.75rem; font-weight: 800; color: #111;
@@ -145,7 +122,6 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* COLORES */
         .c-irina .card-inner { background: linear-gradient(135deg, #bc8abf 0%, #96e8da 100%); }
         .c-donny .card-inner { background: linear-gradient(135deg, #96e8da 0%, #ffb347 100%); }
         .c-qore .card-inner { background: linear-gradient(135deg, #ffb347 0%, #4e52a7 100%); }
@@ -155,16 +131,15 @@
     </style>
 </head>
 <body>
-
-    <nav class="top-banner">
-        <div class="banner-content">
-            <h1 class="logo-text">BlueLab</h1>
-            <span class="tagline">Blueprint Integrations Lab</span>
-        </div>
-    </nav>
-
     <div class="report-frame">
         <div class="report-content">
+            <header>
+                <div class="brand">
+                    <h1>BlueLab</h1>
+                    <span>Blueprint Integrations Lab</span>
+                </div>
+            </header>
+
             <div class="project-grid">
                 <!-- 1. IRINA -->
                 <div class="card c-irina">
@@ -175,7 +150,7 @@
                         <h2>Irina Hire Selection</h2>
                         <p>Optimización inteligente de procesos de selección profesional.</p>
                         <div class="btn-row">
-                            <a href="#" class="card-btn">AGENDAR</a>
+                            <a href="#" class="card-btn">SCHEDULE</a>
                             <a href="https://youtube.com/shorts/9UOam90EQP8" target="_blank" class="card-btn btn-video">▶</a>
                         </div>
                     </div>
@@ -190,7 +165,7 @@
                         <h2>Donny SB</h2>
                         <p>Gestión avanzada de conocimiento y aprendizaje personalizado.</p>
                         <div class="btn-row">
-                            <a href="#" class="card-btn">ACCEDER</a>
+                            <a href="#" class="card-btn">EARLY ACCESS</a>
                             <a href="#" class="card-btn btn-video">▶</a>
                         </div>
                     </div>
@@ -205,7 +180,7 @@
                         <h2>Qore Retail</h2>
                         <p>Centralización de recursos y conectividad en tiempo real.</p>
                         <div class="btn-row">
-                            <a href="#" class="card-btn">VER MÁS</a>
+                            <a href="#" class="card-btn">DEVELOPMENT</a>
                             <a href="#" class="card-btn btn-video">▶</a>
                         </div>
                     </div>
@@ -220,7 +195,7 @@
                         <h2>Companion</h2>
                         <p>Asistencia integral y acompañamiento preventivo digital.</p>
                         <div class="btn-row">
-                            <a href="#" class="card-btn">CONCEPTO</a>
+                            <a href="#" class="card-btn">CONCEPT</a>
                             <a href="#" class="card-btn btn-video">▶</a>
                         </div>
                     </div>
@@ -235,7 +210,7 @@
                         <h2>Pulse Insight</h2>
                         <p>Análisis de cultura organizacional y feedback dinámico.</p>
                         <div class="btn-row">
-                            <a href="#" class="card-btn">CONCEPTO</a>
+                            <a href="#" class="card-btn">CONCEPT</a>
                             <a href="#" class="card-btn btn-video">▶</a>
                         </div>
                     </div>
@@ -250,12 +225,11 @@
                         <h2>Blue POS</h2>
                         <p>Facturación cloud y gestión reactiva multi-dispositivo.</p>
                         <div class="btn-row">
-                            <a href="#" class="card-btn">CONCEPTO</a>
+                            <a href="#" class="card-btn">CONCEPT</a>
                             <a href="#" class="card-btn btn-video">▶</a>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
