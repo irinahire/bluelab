@@ -10,14 +10,14 @@
             --pink-irina: #bc8abf;
             --mint-irina: #96e8da;
             --bg-dark: #05070a;
-            --glass-white: rgba(255, 255, 255, 0.05);
+            /* Color de fondo interno más claro para resaltar las tarjetas */
+            --bg-inner-light: #1c2533; 
         }
 
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-dark);
-            /* EFECTO GALAXIA: Fondo con estrellas sutiles */
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(78, 82, 167, 0.15) 0%, transparent 40%),
                 radial-gradient(circle at 80% 70%, rgba(188, 138, 191, 0.1) 0%, transparent 40%),
@@ -36,13 +36,14 @@
             margin: 20px 0;
             padding: 1px;
             border-radius: 24px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
 
         .report-content {
-            background: rgba(10, 14, 23, 0.8);
-            backdrop-filter: blur(10px);
+            /* Fondo interno ajustado a un tono más claro y visible */
+            background: var(--bg-inner-light);
+            backdrop-filter: blur(15px);
             border-radius: 23px;
             min-height: 100%;
             display: flex;
@@ -51,33 +52,20 @@
         }
 
         header {
-            /* BANNER CON COLOR NEBULAR */
-            background: linear-gradient(120deg, #0a0e17 0%, #1a2332 40%, #2c3e50 100%);
+            background: linear-gradient(120deg, rgba(10,14,23,0.9) 0%, rgba(28,37,51,0.9) 100%);
             padding: 60px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            overflow: hidden;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            top: -50%; right: -10%;
-            width: 300px; height: 300px;
-            background: var(--pink-irina);
-            filter: blur(120px);
-            opacity: 0.15;
         }
 
         .brand h1 {
             font-family: 'Alkatra', cursive;
             font-size: 4.5rem;
             margin: 0;
-            line-height: 0.9;
+            line-height: 1; /* Ajustado para evitar cortes */
             background: linear-gradient(to right, #fff 20%, var(--mint-irina) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .brand span {
@@ -85,7 +73,7 @@
             letter-spacing: 6px;
             text-transform: uppercase;
             font-weight: 700;
-            opacity: 0.7;
+            opacity: 0.8;
             display: block;
             margin-top: 15px;
             color: #85c1e9;
@@ -106,25 +94,22 @@
             flex-direction: column;
             transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             color: white;
-            position: relative;
             border: 1px solid rgba(255,255,255,0.1);
-            /* Fondo de tarjeta sutilmente coloreado por el degradado */
             overflow: hidden;
         }
 
         .card:hover { 
-            transform: translateY(-15px) scale(1.02);
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transform: translateY(-12px);
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
         .card-image-placeholder {
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
             border-radius: 20px;
             margin-bottom: 20px;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -135,53 +120,52 @@
         .card-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
         .card h2 { margin: 0 0 12px 0; font-size: 1.8rem; font-family: 'Alkatra', cursive; }
-        .card p { font-size: 0.9rem; line-height: 1.5; flex-grow: 1; margin-bottom: 25px; opacity: 0.85; font-weight: 400; }
+        .card p { font-size: 0.9rem; line-height: 1.5; flex-grow: 1; margin-bottom: 25px; opacity: 0.9; }
 
-        .btn-row { display: flex; gap: 10px; width: 100%; }
+        .btn-row { display: flex; gap: 10px; width: 100%; height: 48px; /* Altura fija para control total */ }
 
         .card-btn {
             background: white;
-            padding: 14px;
             border-radius: 14px;
             text-decoration: none;
             font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            text-align: center;
+            /* Centrado perfecto con Flexbox */
+            display: flex;
+            align-items: center; 
+            justify-content: center;
             transition: 0.3s;
             flex-grow: 1;
+            padding: 0 15px; /* Padding horizontal solamente */
         }
 
         .btn-video {
-            width: 50px;
+            width: 48px;
             flex-grow: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
             font-size: 1.1rem;
         }
 
-        .card-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
-        .btn-video:hover { background: rgba(255,255,255,0.25); }
+        .card-btn:hover { transform: scale(1.03); filter: brightness(1.1); }
 
-        /* DEGRADADOS POR TARJETA (Fondo + Color de Botón) */
-        .c-irina { background: linear-gradient(135deg, rgba(188, 138, 191, 0.8), rgba(150, 232, 218, 0.6)); }
+        /* DEGRADADOS POR TARJETA */
+        .c-irina { background: linear-gradient(135deg, rgba(188, 138, 191, 0.9), rgba(150, 232, 218, 0.7)); }
         .c-irina .card-btn:not(.btn-video) { color: #bc8abf; }
 
-        .c-donny { background: linear-gradient(135deg, rgba(150, 232, 218, 0.8), rgba(255, 179, 71, 0.6)); }
+        .c-donny { background: linear-gradient(135deg, rgba(150, 232, 218, 0.9), rgba(255, 179, 71, 0.7)); }
         .c-donny .card-btn:not(.btn-video) { color: #e67e22; }
 
-        .c-qore { background: linear-gradient(135deg, rgba(255, 179, 71, 0.8), rgba(78, 82, 167, 0.6)); }
+        .c-qore { background: linear-gradient(135deg, rgba(255, 179, 71, 0.9), rgba(78, 82, 167, 0.7)); }
         .c-qore .card-btn:not(.btn-video) { color: #4e52a7; }
 
-        .c-companion { background: linear-gradient(135deg, rgba(78, 82, 167, 0.8), rgba(155, 89, 182, 0.6)); }
+        .c-companion { background: linear-gradient(135deg, rgba(78, 82, 167, 0.9), rgba(155, 89, 182, 0.7)); }
         .c-companion .card-btn:not(.btn-video) { color: #4e52a7; }
 
-        .c-pulse { background: linear-gradient(135deg, rgba(155, 89, 182, 0.8), rgba(46, 204, 113, 0.6)); }
+        .c-pulse { background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(46, 204, 113, 0.7)); }
         .c-pulse .card-btn:not(.btn-video) { color: #27ae60; }
     </style>
 </head>
@@ -192,17 +176,15 @@
                 <div class="brand"><h1>BlueLab</h1><span>Blueprint Integrations Lab</span></div>
             </header>
             <div class="project-grid">
-                <!-- 1. IRINA HIRE SELECTION -->
                 <div class="card c-irina">
                     <div class="card-image-placeholder"><img src="https://i.ibb.co/wNPN7GP4/cuadrada-para-blic-de-sitio-bluelab.jpg"></div>
                     <h2>Irina Hire Selection</h2>
                     <p>Optimización inteligente de procesos de selección y validación de idoneidad profesional.</p>
                     <div class="btn-row">
                         <a href="#" class="card-btn">AGENDAR CONSULTA</a>
-                        <a href="#" class="card-btn btn-video">▶</a>
+                        <a href="https://youtube.com/shorts/9UOam90EQP8" target="_blank" class="card-btn btn-video">▶</a>
                     </div>
                 </div>
-                <!-- 2. DONNY SB -->
                 <div class="card c-donny">
                     <div class="card-image-placeholder"><img src="https://i.ibb.co/bjgN68bS/donny-sb-concept-v1.jpg"></div>
                     <h2>Donny SB</h2>
@@ -212,7 +194,6 @@
                         <a href="#" class="card-btn btn-video">▶</a>
                     </div>
                 </div>
-                <!-- 3. QORE -->
                 <div class="card c-qore">
                     <div class="card-image-placeholder">🌐</div>
                     <h2>Qore</h2>
@@ -222,7 +203,6 @@
                         <a href="#" class="card-btn btn-video">▶</a>
                     </div>
                 </div>
-                <!-- 4. COMPANION -->
                 <div class="card c-companion">
                     <div class="card-image-placeholder">🛡️</div>
                     <h2>Companion</h2>
@@ -232,7 +212,6 @@
                         <a href="#" class="card-btn btn-video">▶</a>
                     </div>
                 </div>
-                <!-- 5. PULSE INSIGHT -->
                 <div class="card c-pulse">
                     <div class="card-image-placeholder">🌱</div>
                     <h2>Pulse Insight</h2>
