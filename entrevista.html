@@ -24,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* MARCO EXTERIOR DE 10PX */
+        /* MARCO EXTERIOR DE 10PX CON DEGRADÉ SINCRONIZADO */
         .outer-frame {
             padding: 10px;
             background: var(--irina-gradient);
@@ -44,66 +44,64 @@
             position: relative;
         }
 
-        /* VINCHA SUPERIOR CON TÍTULO A LA DERECHA */
+        /* VINCHA SUPERIOR CON TÍTULO FLOTANTE CON DEGRADÉ A LA DERECHA */
         .top-vincha {
             width: 100%; height: 80px;
             background: var(--irina-gradient);
-            display: flex; align-items: center; 
-            justify-content: flex-end; /* Título a la derecha */
+            display: flex; align-items: center; justify-content: flex-end; /* Título a la derecha */
             padding: 0 40px; box-sizing: border-box;
             z-index: 20;
         }
 
         .vincha-title {
-            font-weight: 800; font-size: 28px;
+            color: white; /* Base para el recorte */
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: 1px;
             text-transform: uppercase;
+            /* DEGRADÉ EN EL TEXTO */
             background: white;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-image: var(--irina-gradient);
         }
 
-        /* LOGO EN ÁREA BLANCA */
-        .logo-area {
-            padding: 20px 50px;
-            background: white;
-        }
-        .logo-ihs { height: 65px; width: auto; border-radius: 8px; }
-
         .main-body { flex: 1; display: flex; position: relative; }
 
-        /* PANEL INSTRUCCIONES COMPLETO */
+        /* INSTRUCCIONES COMPLETAS CON CONSENTIMIENTO LEGAL */
         .info-side {
-            flex: 1.2; padding: 0 60px 40px 60px;
+            flex: 1.2; padding: 50px 60px;
             display: flex; flex-direction: column;
             justify-content: center; z-index: 5;
         }
 
-        .info-side h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--text-dark); border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; display: inline-block; }
-        
+        .section-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--text-dark); border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; display: inline-block; }
+        .instructions-text { font-size: 13px; color: var(--text-gray); line-height: 1.6; margin-bottom: 25px; }
+
         .checklist { list-style: none; padding: 0; margin: 0; }
         .checklist li { margin-bottom: 12px; font-size: 13px; display: flex; align-items: center; gap: 10px; color: var(--text-gray); }
+        .checklist b { color: var(--text-dark); }
 
-        /* PANEL IRINA (Ajustado para ocupar todo el alto) */
+        /* PANEL DERECHO CON IRINA AGRANDADA */
         .visual-side {
             flex: 1; position: relative;
             background: #fdfdfd;
             border-left: 1px solid #f3f4f6;
-            overflow: hidden; /* Asegura que Irina no se escape */
+            overflow: hidden; /* Asegura que la imagen no se escape */
         }
 
-        /* AJUSTE IRINA: De la vincha hasta abajo */
+        /* AJUSTE IMAGEN IRINA: Todo el alto, de la vincha hasta abajo */
         .irina-bg {
             position: absolute; 
             top: 0; /* Empieza donde termina la vincha */
             right: 0;
-            height: 100%; /* Todo el alto disponible */
-            width: auto; /* Mantiene proporción */
-            object-fit: cover; /* Cubre el área sin deformar */
+            height: 100%; /* Todo el alto del panel blanco */
+            width: auto; /* Mantiene la proporción */
+            object-fit: cover; /* Cubre todo el área sin deformar */
             z-index: 1;
         }
 
-        /* TARJETA DNI (Fija para no tapar a Irina) */
+        /* TARJETA DNI CENTRADA Y EQUILIBRADA */
         .dni-card {
             background: white;
             padding: 30px; border-radius: 25px;
@@ -111,7 +109,7 @@
             z-index: 10; border: 1px solid #e5e7eb;
             box-shadow: 0 20px 50px rgba(0,0,0,0.1);
             position: absolute;
-            top: 20%; left: 5%;
+            top: 25%; left: 5%; /* Ajustado para no tapar a Irina */
         }
 
         input {
@@ -119,10 +117,10 @@
             border: 2px solid #e5e7eb; border-radius: 12px;
             font-size: 20px; text-align: center;
             margin-bottom: 20px; font-weight: 700;
-            box-sizing: border-box;
+            box-sizing: border-box; background: #f9fafb;
         }
 
-        /* BOTÓN VALIDAR (Fucsia Sólido) */
+        /* BOTÓN VALIDAR IDENTIDAD (FUCSIA SÓLIDO) */
         .btn-validar {
             width: 100%; height: 55px;
             background: var(--fucsia-solid);
@@ -131,30 +129,8 @@
             text-transform: uppercase;
         }
 
-        /* TEXTO CONSENTIMIENTO (NUEVO) */
-        .consent-text {
-            font-size: 10px;
-            color: #9ca3af;
-            margin-top: 10px;
-            line-height: 1.4;
-            font-weight: 600;
-        }
-
-        /* BOTÓN DE LLAMADA (DEGRADÉ - Oculto por defecto en esta versión) */
-        #call-irina-btn {
-            display: none; /* Lo manejaremos luego con el Script */
-            width: 100%; height: 65px;
-            background: var(--irina-gradient);
-            border: none; border-radius: 15px;
-            color: white; font-weight: 800; font-size: 15px;
-            cursor: pointer; text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 15px;
-            align-items: center; justify-content: center;
-        }
-
         .footer-info {
-            position: absolute; bottom: 25px; left: 50px;
+            position: absolute; bottom: 25px; left: 60px;
             font-size: 10px; color: #9ca3af; font-weight: 600;
         }
     </style>
@@ -168,36 +144,31 @@
                 <div class="vincha-title">Irina Hire</div>
             </div>
 
-            <div class="logo-area">
-                <img src="https://i.ibb.co/JFMJBm0S/logo-ihs.jpg" class="logo-ihs" alt="Logo IHS">
-            </div>
-
             <div class="main-body">
                 <div class="info-side">
-                    <h3>Requisitos de Entrevista</h3>
-                    <ul class="checklist">
-                        <li>🎧 <b>Headset Obligatorio:</b> Captura de voz nítida.</li>
-                        <li>📷 <b>Permisos:</b> Debe habilitar Cámara y Micrófono.</li>
-                        <li>💡 <b>Iluminación:</b> Rostro visible y claro.</li>
-                        <li>🤫 <b>Ambiente:</b> Sin ruidos externos.</li>
-                        <li>🚫 <b>Detección:</b> Monitoreo de mirada constante.</li>
-                    </ul>
+                    <div class="section-box">
+                        <h3>Indicaciones de Calidad</h3>
+                        <p class="instructions-text">Para asegurar una evaluación precisa y sin interrupciones por parte de nuestra IA, por favor cumpla con lo siguiente:</p>
+                        <ul class="checklist">
+                            <li>🎧 <b>Headset Obligatorio:</b> Garantiza una captura de voz nítida y cancelación de eco.</li>
+                            <li>💡 <b>Iluminación Frontal:</b> Su rostro debe estar iluminado uniformemente.</li>
+                            <li>🤫 <b>Ambiente Controlado:</b> Sin ruidos externos ni presencia de terceros.</li>
+                            <li>🌐 <b>Conexión:</b> Use Wi-Fi de alta velocidad o conexión por cable.</li>
+                            <li>🚫 <b>Detección de Asistencia:</b> El sistema monitoriza movimientos oculares inusuales.</li>
+                        </ul>
+                        <p style="font-size: 11px; color: #9ca3af; margin-top: 25px; font-weight: 600; line-height: 1.4;">
+                            Al presionar "Validar Identidad", usted acepta los Términos de Servicio y la Política de Privacidad de Irina Hire Selection.
+                        </p>
+                    </div>
                 </div>
 
                 <div class="visual-side">
                     <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-bg">
                     
                     <div class="dni-card">
-                        <div style="font-size:11px; font-weight:800; color:#9ca3af; margin-bottom:15px;">IDENTIFICACIÓN</div>
-                        <input type="text" id="dni-input" placeholder="DNI Postulante">
-                        
-                        <button id="btn-validar" class="btn-validar">Validar Identidad</button>
-                        
-                        <div class="consent-text">
-                            Al validar, acepta los Términos y Condiciones de uso del Portal.
-                        </div>
-
-                        <button id="call-irina-btn">Iniciar Llamada</button>
+                        <div style="font-size:11px; font-weight:800; color:#9ca3af; margin-bottom:18px;">VALIDACIÓN DE POSTULANTE</div>
+                        <input type="text" id="dni-input" placeholder="00.000.000">
+                        <button id="call-irina-btn" class="btn-validar">VALIDAR IDENTIDAD</button>
                     </div>
                 </div>
             </div>
@@ -210,9 +181,25 @@
 
     <script>
     (function(){
-      var btnValidar = document.getElementById("btn-validar");
-      btnValidar.onclick = function() {
-          alert("Front impecable. Esperando la lógica del script funcional en el próximo paso.");
+      var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
+      var ASST = "183129be-11c6-479d-87d3-bc390c593600";
+      
+      function loadVapi(){
+        if(window.vapiSDK) return Promise.resolve();
+        return new Promise(function(res){
+          var s=document.createElement("script");
+          s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+          s.async=true; s.onload=res;
+          document.head.appendChild(s);
+        });
+      }
+
+      var btn = document.getElementById("call-irina-btn");
+      btn.onclick = function(){
+        btn.innerText = "CONECTANDO...";
+        loadVapi().then(function(){
+          window.vapiSDK.run({ apiKey: KEY, assistant: ASST });
+        });
       };
     })();
     </script>
