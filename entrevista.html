@@ -146,6 +146,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: opacity 0.5s ease;
         }
 
         #dni-input-center {
@@ -181,7 +182,7 @@
             left: 50% !important;
             transform: translateX(-50%) !important;
             z-index: 999999 !important;
-            overflow: hidden !important; /* Crucial para el efecto */
+            overflow: hidden !important;
             border: none !important;
             display: flex !important;
             align-items: center !important;
@@ -191,23 +192,21 @@
             text-transform: uppercase !important;
         }
 
-        /* El rayo láser (la parte que gira) */
         .vapi-btn::before {
             content: '';
             position: absolute;
             top: 50%; left: 50%;
-            width: 200%; height: 400%; /* Muy grande para que al rotar cubra todo el borde */
+            width: 200%; height: 400%;
             background: conic-gradient(transparent, transparent, transparent, white);
             transform: translate(-50%, -50%) rotate(0deg);
             animation: rotateLaser 3s linear infinite;
-            display: none; /* Solo se activa en hover */
+            display: none;
         }
 
-        /* Tapa interna para que solo se vea el borde */
         .vapi-btn::after {
-            content: 'HABLAR CON IRINA'; /* El texto vuelve a aparecer aquí arriba de todo */
+            content: 'HABLAR CON IRINA';
             position: absolute;
-            inset: 3px; /* El grosor del borde láser */
+            inset: 3px;
             background: var(--irina-gradient);
             border-radius: 11px;
             display: flex;
@@ -284,6 +283,7 @@
       var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
       var ASST = "183129be-11c6-479d-87d3-bc390c593600";
       var VAR_NAME = "customer_dni";
+
       function loadVapi(){
         if(window.vapiSDK) return Promise.resolve();
         return new Promise(function(res){
@@ -293,13 +293,20 @@
           document.head.appendChild(s);
         });
       }
+
       setTimeout(function(){
         var btn = document.getElementById("call-irina-center");
         var input = document.getElementById("dni-input-center");
+
         btn.onclick = function(){
           var v = (input.value || "").replace(/\D/g, "");
           if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
+          
           btn.innerText = "CONECTANDO...";
+
+          // --- ESTO OCULTA LA TARJETA AL VALIDAR ---
+          document.querySelector(".dni-card").style.display = "none";
+
           loadVapi().then(function(){
             window.vapiSDK.run({ 
               apiKey: KEY, assistant: ASST,
