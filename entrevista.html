@@ -80,44 +80,54 @@
             overflow: hidden;
         }
 
-        /* AJUSTE COLUMNA IZQUIERDA: max-width para forzar salto de línea */
         .info-side {
-            flex: 1; padding: 40px 60px;
+            flex: 1.2; padding: 40px 60px;
             display: flex; flex-direction: column;
             justify-content: center;
             z-index: 5;
         }
 
         .section-box {
-            max-width: 420px; /* Límite para que el texto baje de renglón */
+            max-width: 480px; 
         }
 
         .section-box h3 { 
             font-size: 18px; 
             font-weight: 800; 
-            margin-bottom: 25px; 
+            margin-bottom: 30px; 
             color: var(--text-dark); 
             border-bottom: 2px solid #f3f4f6; 
             padding-bottom: 8px; 
             display: inline-block;
         }
 
+        /* ALINEACIÓN TABULAR PROLIJA */
         .checklist { list-style: none; padding: 0; margin: 0; }
         .checklist li { 
-            margin-bottom: 14px; 
+            margin-bottom: 15px; 
             font-size: 12.5px; 
             display: flex; 
-            align-items: flex-start; /* Alinea ícono arriba si hay varias líneas */
-            gap: 12px; 
+            align-items: flex-start;
             color: var(--text-gray);
             line-height: 1.5;
         }
+
+        .checklist li span.icon {
+            width: 25px;
+            display: inline-block;
+        }
         
-        .checklist li b { color: var(--text-dark); font-weight: 700; }
+        .checklist li b { 
+            color: var(--text-dark); 
+            font-weight: 700; 
+            width: 130px; /* Ancho fijo para que el texto empiece en la misma vertical */
+            display: inline-block;
+            flex-shrink: 0;
+        }
 
         .legal-notice {
-            margin-top: 25px;
-            padding-top: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
             border-top: 1px solid #f3f4f6;
             font-size: 10px;
             color: #9ca3af;
@@ -137,18 +147,18 @@
             object-fit: cover;
         }
 
-        /* TARJETA DNI MÁS ESTRECHA Y REUBICADA */
+        /* CAJA DNI: Un poco más arriba y a la izquierda */
         .dni-card {
             background: white;
             padding: 30px; border-radius: 25px;
-            width: 270px; /* Achicada de 310px a 270px */
+            width: 270px;
             text-align: center;
             z-index: 100;
             border: 1px solid #e5e7eb;
             box-shadow: 0 25px 50px rgba(0,0,0,0.12);
             position: absolute;
-            top: 48%; 
-            left: 65%; /* Movida un pelín más a la derecha */
+            top: 42%; /* Más arriba */
+            left: 58%; /* Más a la izquierda */
             transform: translate(-50%, -50%);
         }
 
@@ -204,13 +214,13 @@
                     <div class="section-box">
                         <h3>PARA UNA ENTREVISTA DE CALIDAD:</h3>
                         <ul class="checklist">
-                            <li>🎧 <b>Audio y Micrófono:</b> Es recomendable el uso de auriculares con micrófono (headset).</li>
-                            <li>🤫 <b>Entorno:</b> Ubíquese en un lugar privado, silencioso y sin interrupciones.</li>
-                            <li>💡 <b>Ambiente:</b> Bien iluminado con luz de frente y cámara a la altura del rostro.</li>
-                            <li>📶 <b>Conexión:</b> Verifique que la conexión a Internet sea estable para evitar cortes o interrupciones.</li>
-                            <li>🔋 <b>Batería:</b> Asegúrese de tener carga completa o conexión a la red eléctrica.</li>
-                            <li>🆔 <b>Identidad:</b> Tenga su DNI a mano, tal vez se le solicite para validar.</li>
-                            <li>🗣️ <b>Atención:</b> La entrevista es interactiva; responda de forma clara y pausada.</li>
+                            <li><span class="icon">🎧</span> <b>Audio y Micrófono:</b><span>Es recomendable el uso de auriculares con micrófono (headset).</span></li>
+                            <li><span class="icon">🤫</span> <b>Entorno:</b><span>Ubíquese en un lugar privado, silencioso y sin interrupciones.</span></li>
+                            <li><span class="icon">💡</span> <b>Ambiente:</b><span>Bien iluminado con luz de frente y cámara a la altura del rostro.</span></li>
+                            <li><span class="icon">📶</span> <b>Conexión:</b><span>Verifique que la conexión a Internet sea estable para evitar cortes o interrupciones.</span></li>
+                            <li><span class="icon">🔋</span> <b>Batería:</b><span>Asegúrese de tener carga completa o conexión a la red eléctrica.</span></li>
+                            <li><span class="icon">🆔</span> <b>Identidad:</b><span>Tenga su DNI a mano, tal vez se le solicite para validar.</span></li>
+                            <li><span class="icon">🗣️</span> <b>Atención:</b><span>La entrevista es interactiva; responda de forma clara y pausada.</span></li>
                         </ul>
                         
                         <div class="legal-notice">
@@ -233,7 +243,6 @@
     </div>
 
     <script>
-    /* ... (Mismo script de Vapi) ... */
     (function(){
       var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
       var ASST = "183129be-11c6-479d-87d3-bc390c593600";
