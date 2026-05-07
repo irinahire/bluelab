@@ -279,43 +279,55 @@
     </div>
 
     <script>
-    (function(){
-      var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
-      var ASST = "183129be-11c6-479d-87d3-bc390c593600";
-      var VAR_NAME = "customer_dni";
+(function(){
+  var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
+  var ASST = "183129be-11c6-479d-87d3-bc390c593600";
+  var VAR_NAME = "customer_dni";
+  
+  function loadVapi(){
+    if(window.vapiSDK) return Promise.resolve();
+    return new Promise(function(res){
+      var s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+      s.async=true; s.onload=res;
+      document.head.appendChild(s);
+    });
+  }
 
-      function loadVapi(){
-        if(window.vapiSDK) return Promise.resolve();
-        return new Promise(function(res){
-          var s=document.createElement("script");
-          s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-          s.async=true; s.onload=res;
-          document.head.appendChild(s);
+  setTimeout(function(){
+    var btn = document.getElementById("call-irina-center");
+    var input = document.getElementById("dni-input-center");
+    
+    btn.onclick = function(){
+      var v = (input.value || "").replace(/\D/g, "");
+      if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
+      
+      // 1. Ocultar la tarjeta y cambiar texto inicial
+      document.querySelector(".dni-card").style.display = "none";
+      btn.innerText = "CONECTANDO...";
+
+      loadVapi().then(function(){
+        const vapi = window.vapiSDK.run({ 
+          apiKey: KEY, assistant: ASST,
+          assistantOverrides: { variableValues: { [VAR_NAME]: v } }
         });
-      }
 
-      setTimeout(function(){
-        var btn = document.getElementById("call-irina-center");
-        var input = document.getElementById("dni-input-center");
+        // 2. Cuando la llamada efectivamente empieza (Atiende Irina)
+        vapi.on('call-start', () => {
+          btn.innerText = "FINALIZAR LLAMADA";
+          btn.style.background = "#ff4b4b"; // Cambia a rojo para indicar "colgar"
+        });
 
-        btn.onclick = function(){
-          var v = (input.value || "").replace(/\D/g, "");
-          if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
-          
-          btn.innerText = "CONECTANDO...";
-
-          // --- ESTO OCULTA LA TARJETA AL VALIDAR ---
-          document.querySelector(".dni-card").style.display = "none";
-
-          loadVapi().then(function(){
-            window.vapiSDK.run({ 
-              apiKey: KEY, assistant: ASST,
-              assistantOverrides: { variableValues: { [VAR_NAME]: v } }
-            });
-          });
-        };
-      }, 1000);
-    })();
-    </script>
+        // 3. Cuando la llamada termina
+        vapi.on('call-end', () => {
+          btn.innerText = "ENTREVISTA FINALIZADA";
+          btn.style.background = "var(--irina-gradient)"; // Vuelve al color original
+          btn.disabled = true; // Opcional: desactivar el botón al terminar
+        });
+      });
+    };
+  }, 1000);
+})();
+</script>
 </body>
 </html>
