@@ -146,7 +146,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: opacity 0.5s ease;
         }
 
         #dni-input-center {
@@ -155,6 +154,12 @@
             margin-bottom: 15px; font-weight: 700; outline: none;
             background: #fafafa;
             box-sizing: border-box;
+            color: var(--text-dark);
+        }
+
+        #dni-input-center::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
         }
 
         #call-irina-center {
@@ -170,8 +175,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- EFECTO RAYO LÁSER PARA VAPI-BTN --- */
-        
+        /* --- BOTÓN VAPI CON TEXTO DINÁMICO --- */
         .vapi-btn {
             border-radius: 14px !important; 
             width: 280px !important; 
@@ -184,12 +188,24 @@
             z-index: 999999 !important;
             overflow: hidden !important;
             border: none !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: white !important;
+            color: transparent !important; /* Ocultamos el texto original de Vapi */
             font-weight: 800 !important;
             text-transform: uppercase !important;
+        }
+
+        /* El nuevo texto que sí podemos controlar */
+        .vapi-btn::after {
+            content: attr(data-text); 
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white !important;
+            font-size: 14px;
+            z-index: 10;
         }
 
         .vapi-btn::before {
@@ -201,23 +217,10 @@
             transform: translate(-50%, -50%) rotate(0deg);
             animation: rotateLaser 3s linear infinite;
             display: none;
+            z-index: 5;
         }
 
-        .vapi-btn::after {
-            content: 'HABLAR CON IRINA';
-            position: absolute;
-            inset: 3px;
-            background: var(--irina-gradient);
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-
-        .vapi-btn:hover::before {
-            display: block;
-        }
+        .vapi-btn:hover::before { display: block; }
 
         @keyframes rotateLaser {
             from { transform: translate(-50%, -50%) rotate(0deg); }
@@ -279,55 +282,69 @@
     </div>
 
     <script>
-(function(){
-  var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
-  var ASST = "183129be-11c6-479d-87d3-bc390c593600";
-  var VAR_NAME = "customer_dni";
-  
-  function loadVapi(){
-    if(window.vapiSDK) return Promise.resolve();
-    return new Promise(function(res){
-      var s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-      s.async=true; s.onload=res;
-      document.head.appendChild(s);
-    });
-  }
+    (function(){
+      var KEY = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
+      var ASST = "183129be-11c6-479d-87d3-bc390c593600";
+      var VAR_NAME = "customer_dni";
 
-  setTimeout(function(){
-    var btn = document.getElementById("call-irina-center");
-    var input = document.getElementById("dni-input-center");
-    
-    btn.onclick = function(){
-      var v = (input.value || "").replace(/\D/g, "");
-      if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
-      
-      // 1. Ocultar la tarjeta y cambiar texto inicial
-      document.querySelector(".dni-card").style.display = "none";
-      btn.innerText = "CONECTANDO...";
-
-      loadVapi().then(function(){
-        const vapi = window.vapiSDK.run({ 
-          apiKey: KEY, assistant: ASST,
-          assistantOverrides: { variableValues: { [VAR_NAME]: v } }
+      function loadVapi(){
+        if(window.vapiSDK) return Promise.resolve();
+        return new Promise(function(res){
+          var s=document.createElement("script");
+          s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+          s.async=true; s.onload=res;
+          document.head.appendChild(s);
         });
+      }
 
-        // 2. Cuando la llamada efectivamente empieza (Atiende Irina)
-        vapi.on('call-start', () => {
-          btn.innerText = "FINALIZAR LLAMADA";
-          btn.style.background = "#ff4b4b"; // Cambia a rojo para indicar "colgar"
-        });
+      setTimeout(function(){
+        var btn = document.getElementById("call-irina-center");
+        var input = document.getElementById("dni-input-center");
 
-        // 3. Cuando la llamada termina
-        vapi.on('call-end', () => {
-          btn.innerText = "ENTREVISTA FINALIZADA";
-          btn.style.background = "var(--irina-gradient)"; // Vuelve al color original
-          btn.disabled = true; // Opcional: desactivar el botón al terminar
-        });
-      });
-    };
-  }, 1000);
-})();
-</script>
+        btn.onclick = function(){
+          var v = (input.value || "").replace(/\D/g, "");
+          if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
+          
+          document.querySelector(".dni-card").style.display = "none";
+          btn.innerText = "CONECTANDO...";
+
+          loadVapi().then(function(){
+            const vapi = window.vapiSDK.run({ 
+              apiKey: KEY, assistant: ASST,
+              assistantOverrides: { variableValues: { [VAR_NAME]: v } }
+            });
+
+            // Función para forzar el texto del botón
+            const updateVapiButton = (text, color) => {
+                const vBtn = document.querySelector('.vapi-btn');
+                if(vBtn) {
+                    vBtn.setAttribute('data-text', text);
+                    if(color) vBtn.style.background = color;
+                }
+            };
+
+            // Cuando el botón aparece por primera vez
+            const checkBtn = setInterval(() => {
+                const vBtn = document.querySelector('.vapi-btn');
+                if(vBtn) {
+                    updateVapiButton("HABLAR CON IRINA");
+                    clearInterval(checkBtn);
+                }
+            }, 100);
+
+            vapi.on('call-start', () => {
+                updateVapiButton("FINALIZAR LLAMADA", "#ff4b4b");
+            });
+
+            vapi.on('call-end', () => {
+                updateVapiButton("ENTREVISTA FINALIZADA", "gray");
+                const vBtn = document.querySelector('.vapi-btn');
+                if(vBtn) vBtn.style.pointerEvents = "none";
+            });
+          });
+        };
+      }, 1000);
+    })();
+    </script>
 </body>
 </html>
