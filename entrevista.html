@@ -169,7 +169,8 @@
             letter-spacing: 0.5px;
         }
 
-        /* CLASE REINTEGRADA PARA EL BOTÓN DE VAPI CON EL EFECTO DE RAYO DE LUZ */
+        /* --- EFECTO RAYO LÁSER PARA VAPI-BTN --- */
+        
         .vapi-btn {
             border-radius: 14px !important; 
             width: 280px !important; 
@@ -179,19 +180,51 @@
             bottom: 5vh !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
-            box-shadow: 0 15px 35px rgba(188, 138, 191, 0.4) !important;
-            transition: all 0.3s ease-in-out !important;
             z-index: 999999 !important;
+            overflow: hidden !important; /* Crucial para el efecto */
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
         }
 
-        /* EFECTO DE RAYO DE LUZ AL PASAR EL MOUSE (HOVER) */
-        .vapi-btn:hover {
-            /* Luz "glow": rayo nítido turquesa/fucsia que recorre el borde */
-            box-shadow: 
-                0 15px 35px rgba(188, 138, 191, 0.4), 
-                0 0 20px 8px rgba(150, 232, 218, 0.8) !important;
-            transform: translateX(-50%) scale(1.03) !important;
+        /* El rayo láser (la parte que gira) */
+        .vapi-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200%; height: 400%; /* Muy grande para que al rotar cubra todo el borde */
+            background: conic-gradient(transparent, transparent, transparent, white);
+            transform: translate(-50%, -50%) rotate(0deg);
+            animation: rotateLaser 3s linear infinite;
+            display: none; /* Solo se activa en hover */
         }
+
+        /* Tapa interna para que solo se vea el borde */
+        .vapi-btn::after {
+            content: 'HABLAR CON IRINA'; /* El texto vuelve a aparecer aquí arriba de todo */
+            position: absolute;
+            inset: 3px; /* El grosor del borde láser */
+            background: var(--irina-gradient);
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .vapi-btn:hover::before {
+            display: block;
+        }
+
+        @keyframes rotateLaser {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
     </style>
 </head>
 <body>
