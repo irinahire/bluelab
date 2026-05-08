@@ -1,82 +1,363 @@
-<script>
-(function(){
-  // 1. CONFIGURACIÓN
-  var KEY_PUBLIC = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
-  var WORKER_URL = "https://web.irinahire-ia.workers.dev"; // Tu Worker de Cloudflare
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irina Hire Selection | Portal de Entrevista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --irina-gradient: linear-gradient(to right, #bc8abf 0%, #96e8da 100%);
+            --fucsia-solid: #bc8abf;
+            --bg-dark: #05070a;
+            --text-dark: #111827;
+            --text-gray: #4b5563;
+        }
 
-  function loadVapi(){
-    if(window.vapiSDK) return Promise.resolve();
-    return new Promise(function(res){
-      var s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-      s.async=true; s.onload=res;
-      document.head.appendChild(s);
-    });
-  }
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
 
-  // Función para controlar la estética del botón de Vapi
-  const updateVapiButton = (text, color) => {
-    const vBtn = document.querySelector('.vapi-btn');
-    if(vBtn) {
-      vBtn.setAttribute('data-text', text);
-      if(color) vBtn.style.background = color;
-    }
-  };
+        .outer-frame {
+            padding: 10px;
+            background: var(--irina-gradient);
+            border-radius: 50px;
+            width: 92%; max-width: 1150px;
+            height: 85vh;
+            display: flex;
+            position: relative;
+        }
 
-  setTimeout(function(){
-    var btn = document.getElementById("call-irina-center");
-    var input = document.getElementById("dni-input-center");
+        .app-container {
+            background: white;
+            width: 100%; height: 100%;
+            border-radius: 40px;
+            display: flex; flex-direction: column;
+            position: relative;
+        }
 
-    btn.onclick = async function(){
-      var v = (input.value || "").replace(/\D/g, "");
-      if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
-      
-      document.querySelector(".dni-card").style.display = "none";
-      btn.innerText = "CONECTANDO CON IRINA...";
+        .top-vincha {
+            width: 100%; height: 90px;
+            background: var(--irina-gradient);
+            display: flex; align-items: center; 
+            justify-content: space-between;
+            padding: 0 45px; box-sizing: border-box;
+            z-index: 20;
+            border-radius: 40px 40px 0 0;
+        }
 
-      try {
-        // 2. PEDIMOS LA LLAMADA AL WORKER (Esto inyecta el DNI y el Webhook de Make)
-        const response = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dni: v })
+        .brand-left {
+            display: flex; flex-direction: column;
+            color: white; line-height: 1.1;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .blue-lab-text { font-weight: 900; font-size: 26px; letter-spacing: -1px; }
+        .blueprint-subtext { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.95; }
+
+        .vincha-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900; font-size: 24px;
+            text-transform: uppercase;
+            background: white;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: var(--irina-gradient);
+            filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white);
+        }
+
+        .main-body { 
+            flex: 1; display: flex; 
+            position: relative; 
+            border-radius: 0 0 40px 40px;
+            overflow: hidden;
+        }
+
+        .info-side {
+            flex: 1.3; padding: 40px 60px;
+            display: flex; flex-direction: column;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .section-box { max-width: 500px; }
+
+        .section-box h3 { 
+            font-size: 18px; font-weight: 800; 
+            margin-bottom: 25px; color: var(--text-dark); 
+            border-bottom: 2px solid #f3f4f6; 
+            padding-bottom: 8px; display: inline-block;
+        }
+
+        .checklist { list-style: none; padding: 0; margin: 0; }
+        .checklist li { 
+            margin-bottom: 12px; font-size: 12px; 
+            display: flex; align-items: flex-start;
+            color: var(--text-gray); line-height: 1.4;
+        }
+
+        .checklist li .icon { width: 25px; flex-shrink: 0; }
+        .checklist li b { 
+            color: var(--text-dark); font-weight: 700; 
+            width: 135px; display: inline-block; flex-shrink: 0;
+        }
+
+        .legal-notice {
+            margin-top: 25px;
+            padding-top: 15px; border-top: 1px solid #f3f4f6;
+            font-size: 10px; color: #9ca3af; line-height: 1.5;
+        }
+
+        .visual-side {
+            flex: 1; position: relative;
+            background: #fdfdfd; border-left: 1px solid #f3f4f6;
+        }
+
+        .irina-bg {
+            position: absolute; top: 0; right: 0;
+            height: 100%; width: auto; object-fit: cover;
+        }
+
+        .support-white-zone {
+            position: absolute;
+            bottom: 30px;
+            right: 220px; 
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+            z-index: 15;
+            text-align: right;
+            letter-spacing: 0.5px;
+        }
+
+        .dni-card {
+            background: white; padding: 30px; border-radius: 25px;
+            width: 270px; text-align: center; z-index: 100;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 40%; left: 63%; 
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #dni-input-center {
+            width: 100%; padding: 15px 0; border: 2px solid #f3f4f6;
+            border-radius: 14px; font-size: 17px; text-align: center;
+            margin-bottom: 15px; font-weight: 700; outline: none;
+            background: #fafafa;
+            box-sizing: border-box;
+            color: var(--text-dark);
+        }
+
+        #dni-input-center::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        #call-irina-center {
+            width: 100%; height: 52px; background: var(--fucsia-solid);
+            color: white; border: none; border-radius: 14px;
+            font-weight: 800; cursor: pointer; text-transform: uppercase;
+            box-sizing: border-box;
+        }
+
+        .footer-brand-complete {
+            position: absolute; bottom: 20px; left: 60px;
+            font-size: 9px; color: #d1d5db; font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- BOTÓN VAPI CON TEXTO DINÁMICO --- */
+        .vapi-btn {
+            border-radius: 14px !important; 
+            width: 280px !important; 
+            height: 60px !important;
+            background: var(--irina-gradient) !important;
+            position: fixed !important;
+            bottom: 5vh !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 999999 !important;
+            overflow: hidden !important;
+            border: none !important;
+            color: transparent !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+        }
+
+        .vapi-btn::after {
+            content: attr(data-text); 
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white !important;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        .vapi-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200%; height: 400%;
+            background: conic-gradient(transparent, transparent, transparent, white);
+            transform: translate(-50%, -50%) rotate(0deg);
+            animation: rotateLaser 3s linear infinite;
+            display: none;
+            z-index: 5;
+        }
+
+        .vapi-btn:hover::before { display: block; }
+
+        @keyframes rotateLaser {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="outer-frame">
+        <div class="app-container">
+            <div class="dni-card">
+                <div style="font-size:9px; font-weight:800; color:#9ca3af; margin-bottom:15px; letter-spacing:1px;">VALIDACIÓN DNI DE POSTULANTE</div>
+                <input id="dni-input-center" placeholder="Ejemplo DNI: 43825914" inputmode="numeric">
+                <button id="call-irina-center">VALIDAR Y COMENZAR</button>
+            </div>
+
+            <div class="top-vincha">
+                <div class="brand-left">
+                    <span class="blue-lab-text">BLUE LAB</span>
+                    <span class="blueprint-subtext">Blueprint Integrations Lab</span>
+                </div>
+                <div class="vincha-title">Irina Hire Selection</div>
+            </div>
+
+            <div class="main-body">
+                <div class="info-side">
+                    <div class="section-box">
+                        <h3>PARA UNA ENTREVISTA DE CALIDAD:</h3>
+                        <ul class="checklist">
+                            <li><span class="icon">🎧</span> <b>Audio y Micrófono:</b><span>Es recomendable el uso de auriculares con micrófono.</span></li>
+                            <li><span class="icon">🤫</span> <b>Entorno:</b><span>Ubíquese en un lugar privado, silencioso y sin interrupciones.</span></li>
+                            <li><span class="icon">💡</span> <b>Ambiente:</b><span>Bien iluminado con luz de frente y cámara a la altura del rostro.</span></li>
+                            <li><span class="icon">📶</span> <b>Conexión:</b><span>Verifique que la conexión a Internet sea estable para evitar cortes.</span></li>
+                            <li><span class="icon">🔋</span> <b>Batería:</b><span>Asegúrese de tener carga completa o conexión a la red eléctrica.</span></li>
+                            <li><span class="icon">🆔</span> <b>Identidad:</b><span>Tenga su DNI a mano, tal vez se le solicite para validar.</span></li>
+                            <li><span class="icon">🗣️</span> <b>Atención:</b><span>La entrevista es interactiva; responda de forma clara y pausada.</span></li>
+                        </ul>
+                        
+                        <div class="legal-notice">
+                            Al validar su identidad e iniciar la llamada, usted acepta nuestras <b>Políticas de Privacidad</b> y consiente la grabación de la sesión para fines exclusivos de evaluación profesional.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-side">
+                    <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-bg">
+                    <div class="support-white-zone">
+                        SOPORTE: SOPORTE@BLUELAB.ONLINE
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-brand-complete">
+                POWERED BY BLUEPRINT INTEGRATIONS LAB | BLUE LAB
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+      var KEY_PUBLIC = "403b3e01-61b7-4bc2-9c23-67a1f29c564d";
+      var WORKER_URL = "https://web.irinahire-ia.workers.dev"; // Tu URL de Cloudflare
+
+      function loadVapi(){
+        if(window.vapiSDK) return Promise.resolve();
+        return new Promise(function(res){
+          var s=document.createElement("script");
+          s.src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+          s.async=true; s.onload=res;
+          document.head.appendChild(s);
         });
-
-        const callData = await response.json();
-
-        if(!response.ok) throw new Error("Error en Worker");
-
-        // 3. INICIAMOS EL SDK CON LA URL SEGURA
-        await loadVapi();
-        const vapi = window.vapiSDK.run({
-          apiKey: KEY_PUBLIC,
-          webCallUrl: callData.webCallUrl // Usamos la URL que generó el Worker
-        });
-
-        // 4. CONTROL DE ESTADOS DEL BOTÓN
-        const checkBtn = setInterval(() => {
-          const vBtn = document.querySelector('.vapi-btn');
-          if(vBtn) {
-            updateVapiButton("HABLAR CON IRINA");
-            clearInterval(checkBtn);
-          }
-        }, 100);
-
-        vapi.on('call-start', () => updateVapiButton("FINALIZAR LLAMADA", "#ff4b4b"));
-        
-        vapi.on('call-end', () => {
-          updateVapiButton("ENTREVISTA FINALIZADA", "gray");
-          const vBtn = document.querySelector('.vapi-btn');
-          if(vBtn) vBtn.style.pointerEvents = "none";
-        });
-
-      } catch (err) {
-        console.error(err);
-        alert("Hubo un problema al iniciar la conexión. Reintente en unos instantes.");
-        document.querySelector(".dni-card").style.display = "flex";
-        btn.innerText = "VALIDAR Y COMENZAR";
       }
-    };
-  }, 1000);
-})();
-</script>
+
+      const updateVapiButton = (text, color) => {
+        const vBtn = document.querySelector('.vapi-btn');
+        if(vBtn) {
+          vBtn.setAttribute('data-text', text);
+          if(color) vBtn.style.background = color;
+        }
+      };
+
+      setTimeout(function(){
+        var btn = document.getElementById("call-irina-center");
+        var input = document.getElementById("dni-input-center");
+
+        btn.onclick = async function(){
+          var v = (input.value || "").replace(/\D/g, "");
+          if(v.length < 6){ alert("Por favor, ingrese un DNI válido."); return; }
+          
+          document.querySelector(".dni-card").style.display = "none";
+          btn.innerText = "CONECTANDO...";
+
+          try {
+            // Llamamos al Worker para obtener el webCallUrl seguro
+            const response = await fetch(WORKER_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ dni: v })
+            });
+
+            const callData = await response.json();
+            if(!response.ok) throw new Error("Error en Worker");
+
+            await loadVapi();
+
+            // Iniciamos usando la URL que generó el Worker
+            const vapi = window.vapiSDK.run({
+              apiKey: KEY_PUBLIC,
+              webCallUrl: callData.webCallUrl
+            });
+
+            const checkBtn = setInterval(() => {
+              const vBtn = document.querySelector('.vapi-btn');
+              if(vBtn) {
+                updateVapiButton("HABLAR CON IRINA");
+                clearInterval(checkBtn);
+              }
+            }, 100);
+
+            vapi.on('call-start', () => updateVapiButton("FINALIZAR LLAMADA", "#ff4b4b"));
+            
+            vapi.on('call-end', () => {
+              updateVapiButton("ENTREVISTA FINALIZADA", "gray");
+              const vBtn = document.querySelector('.vapi-btn');
+              if(vBtn) vBtn.style.pointerEvents = "none";
+            });
+
+          } catch (err) {
+            console.error(err);
+            alert("No se pudo iniciar la conexión. Verificá tu conexión o reintentá.");
+            document.querySelector(".dni-card").style.display = "flex";
+            btn.innerText = "VALIDAR Y COMENZAR";
+          }
+        };
+      }, 1000);
+    })();
+    </script>
+</body>
+</html>
