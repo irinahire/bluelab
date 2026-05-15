@@ -13,7 +13,6 @@ async function hablarIrina(texto) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: texto })
         });
-
         const data = await response.json();
         if (data.audio) {
             statusDisplay.innerHTML = `<div style="color:#bc8abf; font-weight:800;">Irina: "${data.texto}"</div>`;
