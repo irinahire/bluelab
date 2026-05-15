@@ -13,12 +13,16 @@ async function hablarIrina(texto) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: texto })
         });
+
         const data = await response.json();
         if (data.audio) {
             statusDisplay.innerHTML = `<div style="color:#bc8abf; font-weight:800;">Irina: "${data.texto}"</div>`;
             if (currentAudio) currentAudio.pause();
             currentAudio = new Audio(data.audio);
-            currentAudio.onended = () => { isProcessing = false; if(isCallActive) statusDisplay.innerText = "TE ESCUCHO..."; };
+            currentAudio.onended = () => {
+                isProcessing = false;
+                if(isCallActive) statusDisplay.innerText = "TE ESCUCHO...";
+            };
             await currentAudio.play();
         }
     } catch (e) { 
@@ -37,7 +41,9 @@ async function iniciarLlamada() {
         socket = new WebSocket('wss://api.deepgram.com/v1/listen?model=nova-2&language=es-419', ['token', DEEPGRAM_KEY]);
         socket.onopen = () => {
             mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-            mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0 && socket.readyState === 1 && !isProcessing) socket.send(e.data); };
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0 && socket.readyState === 1 && !isProcessing) socket.send(e.data);
+            };
             mediaRecorder.start(250);
             setTimeout(() => hablarIrina("INICIO_AUTOMATICO"), 500);
         };
