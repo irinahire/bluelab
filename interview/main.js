@@ -1,52 +1,99 @@
-let mediaRecorder;
-let audioChunks = [];
+// /interview/main.js
 
-async function startRecording() {
+let recognition;
+let isRecording = false;
+
+// 1. Configuración del Reconocimiento de Voz (Browser Nativo)
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'es-AR'; // Español de Argentina
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+        document.getElementById('status').innerText = "IRINA TE ESCUCHA...";
+        document.getElementById('btn-mic').innerText = "DETENER";
+    };
+
+    recognition.onresult = (event) => {
+        const textoEscuchado = event.results[0][0].transcript;
+        console.log("Escuchado:", textoEscuchado);
+        hablarConIrina(textoEscuchado);
+    };
+
+    recognition.onerror = (event) => {
+        console.error("Error de reconocimiento:", event.error);
+        document.getElementById('status').innerText = "ERROR DE AUDIO";
+        isRecording = false;
+    };
+
+    recognition.onend = () => {
+        isRecording = false;
+        document.getElementById('btn-mic').innerText = "HABLAR CON IRINA";
+    };
+}
+
+// 2. Función que activa/desactiva el micrófono
+async function toggleRecording() {
+    if (!recognition) {
+        alert("Tu navegador no soporta reconocimiento de voz. Usa Chrome o Edge.");
+        return;
+    }
+
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        
-        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
-        mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-            const reader = new FileReader();
-            reader.readAsDataURL(audioBlob);
-            reader.onloadend = async () => {
-                const base64Audio = reader.result.split(',')[1];
-                // Enviamos el audio o texto procesado a nuestra API
-                hablarConIrina(base64Audio);
-            };
-            audioChunks = [];
-        };
-
-        mediaRecorder.start();
-        document.getElementById('status').innerText = "Escuchando...";
+        if (!isRecording) {
+            // Esto fuerza al navegador a pedir el permiso la primera vez
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+            recognition.start();
+            isRecording = true;
+        } else {
+            recognition.stop();
+            isRecording = false;
+        }
     } catch (err) {
-        console.error("Error acceso micro:", err);
+        console.error("Permiso denegado:", err);
+        alert("Debes permitir el acceso al micrófono para hablar con Irina.");
     }
 }
 
-async function hablarConIrina(entrada) {
+// 3. Comunicación con el Cerebro (Vercel API)
+async function hablarConIrina(textoUsuario) {
+    const status = document.getElementById('status');
+    const display = document.getElementById('irina-text');
+    
+    status.innerText = "IRINA PENSANDO...";
+    
     try {
-        document.getElementById('status').innerText = "Irina pensando...";
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: entrada })
+            body: JSON.stringify({ text: textoUsuario })
         });
 
         const data = await response.json();
+        
+        // Mostramos el texto en pantalla
+        display.innerText = data.texto;
+        
+        // Reproducimos la voz de Antonia
         if (data.audio) {
             const audio = new Audio(data.audio);
             audio.play();
-            document.getElementById('irina-text').innerText = data.texto;
+            status.innerText = "IRINA HABLANDO";
+            audio.onended = () => {
+                status.innerText = "SISTEMA LISTO";
+            };
         }
+
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error en la API:", error);
+        display.innerText = "No pude conectarme con mi cerebro. Reintenta.";
+        status.innerText = "ERROR";
     }
 }
 
-// Iniciar al cargar
+// 4. Saludo inicial al cargar la página
 window.onload = () => {
-    hablarConIrina("INICIO_AUTOMATICO");
+    console.log("Irina lista en bluelab.online");
 };
