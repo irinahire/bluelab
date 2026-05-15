@@ -1,9 +1,7 @@
 // /interview/main.js
-
 let recognition;
 let isRecording = false;
 
-// Inicializar el sistema de voz
 function initRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -19,12 +17,10 @@ function initRecognition() {
 
         recognition.onresult = (event) => {
             const textoEscuchado = event.results[0][0].transcript;
-            console.log("Hablaste:", textoEscuchado);
             hablarConIrina(textoEscuchado);
         };
 
-        recognition.onerror = (event) => {
-            console.error("Error micrófono:", event.error);
+        recognition.onerror = () => {
             document.getElementById('status').innerText = "SISTEMA LISTO";
             isRecording = false;
         };
@@ -36,10 +32,8 @@ function initRecognition() {
     }
 }
 
-// Función del botón
 async function toggleRecording() {
     if (!recognition) initRecognition();
-
     try {
         if (!isRecording) {
             await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -54,14 +48,13 @@ async function toggleRecording() {
     }
 }
 
-// Enviar a la API y recibir voz
 async function hablarConIrina(textoUsuario) {
     const status = document.getElementById('status');
     const display = document.getElementById('irina-text');
-    
     status.innerText = "IRINA PENSANDO...";
-    
+
     try {
+        // Usamos la ruta absoluta para evitar errores de carpeta
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -69,28 +62,22 @@ async function hablarConIrina(textoUsuario) {
         });
 
         const data = await response.json();
-
         if (data.error) throw new Error(data.error);
-        
+
         display.innerText = data.texto;
-        
         if (data.audio) {
             const audio = new Audio(data.audio);
             status.innerText = "IRINA HABLANDO";
             audio.play();
-            audio.onended = () => {
-                status.innerText = "SISTEMA LISTO";
-            };
+            audio.onended = () => status.innerText = "SISTEMA LISTO";
         }
-
     } catch (error) {
         console.error("Error:", error);
-        display.innerText = "Error al conectar. Verifica las API Keys en Vercel.";
+        display.innerText = "Error de conexión: " + error.message;
         status.innerText = "SISTEMA LISTO";
     }
 }
 
-// Al cargar la web
 window.onload = () => {
     document.getElementById('status').innerText = "SISTEMA LISTO";
     initRecognition();
