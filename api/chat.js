@@ -13,7 +13,6 @@ export default async function handler(req, res) {
         const { text } = req.body;
         const prompt = text === "INICIO_AUTOMATICO" ? "Saludá a Walter brevemente." : text;
 
-        // 1. Gemini
         const gRes = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
         const gData = await gRes.json();
         const aiText = gData.candidates[0].content.parts[0].text;
 
-        // 2. Deepgram
         const dRes = await fetch("https://api.deepgram.com/v1/speak?model=aura-2-antonia-es", {
             method: 'POST',
             headers: { 'Authorization': `Token ${DEEPGRAM_KEY}`, 'Content-Type': 'application/json' },
