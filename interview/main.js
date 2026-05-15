@@ -3,7 +3,7 @@
 let recognition;
 let isRecording = false;
 
-// 1. Inicialización del reconocimiento de voz
+// Inicializar el sistema de voz
 function initRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -19,13 +19,13 @@ function initRecognition() {
 
         recognition.onresult = (event) => {
             const textoEscuchado = event.results[0][0].transcript;
-            console.log("Usuario dijo:", textoEscuchado);
+            console.log("Hablaste:", textoEscuchado);
             hablarConIrina(textoEscuchado);
         };
 
         recognition.onerror = (event) => {
-            console.error("Error de audio:", event.error);
-            document.getElementById('status').innerText = "ERROR DE MICRÓFONO";
+            console.error("Error micrófono:", event.error);
+            document.getElementById('status').innerText = "SISTEMA LISTO";
             isRecording = false;
         };
 
@@ -33,24 +33,15 @@ function initRecognition() {
             isRecording = false;
             document.getElementById('btn-mic').innerText = "HABLAR CON IRINA";
         };
-    } else {
-        console.error("Navegador no soporta WebSpeech API");
     }
 }
 
-// 2. Función que se dispara al hacer clic en el botón
+// Función del botón
 async function toggleRecording() {
-    // Si no se inicializó el reconocimiento, lo hacemos ahora
     if (!recognition) initRecognition();
-
-    if (!recognition) {
-        alert("Tu navegador no es compatible con el reconocimiento de voz. Usá Chrome o Edge.");
-        return;
-    }
 
     try {
         if (!isRecording) {
-            // Solicitud explícita de permiso al usuario
             await navigator.mediaDevices.getUserMedia({ audio: true });
             recognition.start();
             isRecording = true;
@@ -59,12 +50,11 @@ async function toggleRecording() {
             isRecording = false;
         }
     } catch (err) {
-        console.error("Permiso de micrófono denegado:", err);
-        alert("Debes permitir el acceso al micrófono para interactuar con Irina.");
+        alert("Permiso de micrófono denegado.");
     }
 }
 
-// 3. Envío de texto al servidor y reproducción de respuesta
+// Enviar a la API y recibir voz
 async function hablarConIrina(textoUsuario) {
     const status = document.getElementById('status');
     const display = document.getElementById('irina-text');
@@ -72,26 +62,18 @@ async function hablarConIrina(textoUsuario) {
     status.innerText = "IRINA PENSANDO...";
     
     try {
-        // IMPORTANTE: Aseguramos que apunte a la ruta correcta de la API en Vercel
         const response = await fetch('/api/chat', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: textoUsuario })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Fallo en la respuesta del servidor");
-        }
-
         const data = await response.json();
+
+        if (data.error) throw new Error(data.error);
         
-        // Actualizamos el texto en la burbuja de Irina
         display.innerText = data.texto;
         
-        // Si el servidor devolvió audio, lo reproducimos
         if (data.audio) {
             const audio = new Audio(data.audio);
             status.innerText = "IRINA HABLANDO";
@@ -102,20 +84,14 @@ async function hablarConIrina(textoUsuario) {
         }
 
     } catch (error) {
-        console.error("Error detallado en la comunicación:", error);
-        display.innerText = "Hubo un problema al conectar con el servidor.";
-        status.innerText = "ERROR DE CONEXIÓN";
-        
-        // Reset automático para poder reintentar
-        setTimeout(() => {
-            status.innerText = "SISTEMA LISTO";
-        }, 3000);
+        console.error("Error:", error);
+        display.innerText = "Error al conectar. Verifica las API Keys en Vercel.";
+        status.innerText = "SISTEMA LISTO";
     }
 }
 
-// 4. Configuración inicial al cargar la página
+// Al cargar la web
 window.onload = () => {
     document.getElementById('status').innerText = "SISTEMA LISTO";
-    document.getElementById('irina-text').innerText = "Haz clic en el botón para comenzar la entrevista.";
     initRecognition();
 };
