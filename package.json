@@ -1,0 +1,9 @@
+{
+  "name": "irina-hire",
+  "version": "1.0.0",
+  "main": "api/chat.js",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "type": "module"
+}
