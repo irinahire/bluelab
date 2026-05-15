@@ -3,47 +3,51 @@
 let recognition;
 let isRecording = false;
 
-// 1. Configuración del Reconocimiento de Voz (Browser Nativo)
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = 'es-AR'; // Español de Argentina
-    recognition.continuous = false;
-    recognition.interimResults = false;
+// 1. Inicialización segura del reconocimiento de voz
+function initRecognition() {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'es-AR';
+        recognition.continuous = false;
+        recognition.interimResults = false;
 
-    recognition.onstart = () => {
-        document.getElementById('status').innerText = "IRINA TE ESCUCHA...";
-        document.getElementById('btn-mic').innerText = "DETENER";
-    };
+        recognition.onstart = () => {
+            document.getElementById('status').innerText = "IRINA TE ESCUCHA...";
+            document.getElementById('btn-mic').innerText = "DETENER";
+        };
 
-    recognition.onresult = (event) => {
-        const textoEscuchado = event.results[0][0].transcript;
-        console.log("Escuchado:", textoEscuchado);
-        hablarConIrina(textoEscuchado);
-    };
+        recognition.onresult = (event) => {
+            const textoEscuchado = event.results[0][0].transcript;
+            console.log("Usuario dijo:", textoEscuchado);
+            hablarConIrina(textoEscuchado);
+        };
 
-    recognition.onerror = (event) => {
-        console.error("Error de reconocimiento:", event.error);
-        document.getElementById('status').innerText = "ERROR DE AUDIO";
-        isRecording = false;
-    };
+        recognition.onerror = (event) => {
+            console.error("Error de audio:", event.error);
+            document.getElementById('status').innerText = "SISTEMA LISTO";
+            isRecording = false;
+        };
 
-    recognition.onend = () => {
-        isRecording = false;
-        document.getElementById('btn-mic').innerText = "HABLAR CON IRINA";
-    };
+        recognition.onend = () => {
+            isRecording = false;
+            document.getElementById('btn-mic').innerText = "HABLAR CON IRINA";
+        };
+    }
 }
 
-// 2. Función que activa/desactiva el micrófono
+// 2. Función del botón (Solo actúa al hacer CLIC)
 async function toggleRecording() {
+    if (!recognition) initRecognition();
+
     if (!recognition) {
-        alert("Tu navegador no soporta reconocimiento de voz. Usa Chrome o Edge.");
+        alert("Navegador no compatible con voz.");
         return;
     }
 
     try {
         if (!isRecording) {
-            // Esto fuerza al navegador a pedir el permiso la primera vez
+            // Pedimos permiso de audio solo al hacer clic
             await navigator.mediaDevices.getUserMedia({ audio: true });
             recognition.start();
             isRecording = true;
@@ -52,17 +56,16 @@ async function toggleRecording() {
             isRecording = false;
         }
     } catch (err) {
-        console.error("Permiso denegado:", err);
-        alert("Debes permitir el acceso al micrófono para hablar con Irina.");
+        alert("Debes permitir el micrófono para usar a Irina.");
     }
 }
 
-// 3. Comunicación con el Cerebro (Vercel API)
+// 3. Comunicación con el backend (API)
 async function hablarConIrina(textoUsuario) {
     const status = document.getElementById('status');
     const display = document.getElementById('irina-text');
     
-    status.innerText = "IRINA PENSANDO...";
+    status.innerText = "IRINA PENSANDO..."; // Solo aparece aquí ahora
     
     try {
         const response = await fetch('/api/chat', {
@@ -73,27 +76,26 @@ async function hablarConIrina(textoUsuario) {
 
         const data = await response.json();
         
-        // Mostramos el texto en pantalla
         display.innerText = data.texto;
         
-        // Reproducimos la voz de Antonia
         if (data.audio) {
             const audio = new Audio(data.audio);
-            audio.play();
             status.innerText = "IRINA HABLANDO";
+            audio.play();
             audio.onended = () => {
                 status.innerText = "SISTEMA LISTO";
             };
         }
 
     } catch (error) {
-        console.error("Error en la API:", error);
-        display.innerText = "No pude conectarme con mi cerebro. Reintenta.";
-        status.innerText = "ERROR";
+        display.innerText = "Error de conexión con el servidor.";
+        status.innerText = "SISTEMA LISTO";
     }
 }
 
-// 4. Saludo inicial al cargar la página
+// 4. Estado inicial al cargar
 window.onload = () => {
-    console.log("Irina lista en bluelab.online");
+    document.getElementById('status').innerText = "SISTEMA LISTO";
+    document.getElementById('irina-text').innerText = "Haz clic en el botón para comenzar la entrevista.";
+    initRecognition();
 };
