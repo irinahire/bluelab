@@ -4,126 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Irina Hire Selection | Portal de Entrevista</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --irina-gradient: linear-gradient(to right, #bc8abf 0%, #96e8da 100%);
-            --fucsia-solid: #bc8abf;
             --bg-dark: #05070a;
             --text-dark: #111827;
             --text-gray: #4b5563;
         }
-
-        body {
-            margin: 0; padding: 0;
-            background: var(--bg-dark);
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-
-        .outer-frame {
-            padding: 10px;
-            background: var(--irina-gradient);
-            border-radius: 50px;
-            width: 92%; max-width: 1150px;
-            height: 85vh;
-            display: flex;
-            position: relative;
-        }
-
-        .app-container {
-            background: white;
-            width: 100%; height: 100%;
-            border-radius: 40px;
-            display: flex; flex-direction: column;
-            position: relative;
-        }
-
-        .top-vincha {
-            width: 100%; height: 90px;
-            background: var(--irina-gradient);
-            display: flex; align-items: center; 
-            justify-content: space-between;
-            padding: 0 45px; box-sizing: border-box;
-            z-index: 20;
-            border-radius: 40px 40px 0 0;
-        }
-
-        .brand-left {
-            display: flex; flex-direction: column;
-            color: white; line-height: 1.1;
-            font-family: 'Montserrat', sans-serif;
-        }
-
+        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Inter', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .outer-frame { padding: 10px; background: var(--irina-gradient); border-radius: 50px; width: 92%; max-width: 1150px; height: 85vh; display: flex; position: relative; }
+        .app-container { background: white; width: 100%; height: 100%; border-radius: 40px; display: flex; flex-direction: column; position: relative; }
+        .top-vincha { width: 100%; height: 90px; background: var(--irina-gradient); display: flex; align-items: center; justify-content: space-between; padding: 0 45px; box-sizing: border-box; border-radius: 40px 40px 0 0; }
+        .brand-left { display: flex; flex-direction: column; color: white; line-height: 1.1; font-family: 'Montserrat', sans-serif; }
         .blue-lab-text { font-weight: 900; font-size: 26px; letter-spacing: -1px; }
         .blueprint-subtext { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.95; }
-
-        .vincha-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900; font-size: 24px;
-            text-transform: uppercase;
-            background: white;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: var(--irina-gradient);
-            filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white);
-        }
-
-        .main-body { 
-            flex: 1; display: flex; 
-            position: relative; 
-            border-radius: 0 0 40px 40px;
-            overflow: hidden;
-        }
-
-        .info-side {
-            flex: 1.3; padding: 40px 60px;
-            display: flex; flex-direction: column;
-            justify-content: center;
-            z-index: 5;
-        }
-
-        .chat-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 25px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            min-height: 100px;
-        }
-
-        #irina-text { font-size: 20px; color: var(--text-dark); font-weight: 600; margin: 0; }
-        #status { font-size: 10px; font-weight: 800; color: var(--fucsia-solid); margin-bottom: 5px; text-transform: uppercase; }
-
-        .visual-side {
-            flex: 1; position: relative;
-            background: #fdfdfd; border-left: 1px solid #f3f4f6;
-        }
-
-        .irina-bg {
-            position: absolute; top: 0; right: 0;
-            height: 100%; width: auto; object-fit: cover;
-        }
-
-        .mic-btn {
-            background: var(--irina-gradient);
-            color: white; border: none;
-            padding: 15px 40px; border-radius: 15px;
-            font-weight: 800; cursor: pointer;
-            text-transform: uppercase; font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .mic-btn:active { transform: scale(0.95); }
-
-        .footer-brand-complete {
-            position: absolute; bottom: 20px; left: 60px;
-            font-size: 9px; color: #d1d5db; font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        .vincha-title { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px; text-transform: uppercase; background: white; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-image: var(--irina-gradient); filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white); }
+        .main-body { flex: 1; display: flex; position: relative; border-radius: 0 0 40px 40px; overflow: hidden; }
+        .info-side { flex: 1.3; padding: 40px 60px; display: flex; flex-direction: column; justify-content: center; }
+        .section-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 25px; color: var(--text-dark); border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; display: inline-block; }
+        .checklist { list-style: none; padding: 0; margin: 0; }
+        .checklist li { margin-bottom: 12px; font-size: 12px; display: flex; align-items: flex-start; color: var(--text-gray); line-height: 1.4; }
+        .checklist li .icon { width: 25px; flex-shrink: 0; }
+        .checklist li b { color: var(--text-dark); font-weight: 700; width: 135px; display: inline-block; flex-shrink: 0; }
+        .visual-side { flex: 1; position: relative; background: #fdfdfd; border-left: 1px solid #f3f4f6; }
+        .irina-bg { position: absolute; top: 0; right: 0; height: 100%; width: auto; object-fit: cover; }
+        .vapi-btn { border-radius: 14px; width: 280px; height: 60px; background: var(--irina-gradient); position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 999; border: none; color: white; font-weight: 800; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
+        #status-display { position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 800; color: #bc8abf; letter-spacing: 1px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -136,24 +43,24 @@
                 </div>
                 <div class="vincha-title">Irina Hire Selection</div>
             </div>
-
             <div class="main-body">
                 <div class="info-side">
-                    <div id="status">SISTEMA LISTO</div>
-                    <div class="chat-box">
-                        <p id="irina-text">Haz clic en el botón para comenzar la entrevista.</p>
+                    <div class="section-box">
+                        <h3>RECOMENDACIONES:</h3>
+                        <ul class="checklist">
+                            <li><span class="icon">🎧</span> <b>Audio:</b><span>Use auriculares para evitar eco.</span></li>
+                            <li><span class="icon">🤫</span> <b>Entorno:</b><span>Busque un lugar silencioso.</span></li>
+                            <li><span class="icon">🗣️</span> <b>Charla:</b><span>Hable de forma clara y pausada.</span></li>
+                        </ul>
                     </div>
-                    <button id="btn-mic" class="mic-btn" onclick="toggleRecording()">Hablar con Irina</button>
                 </div>
-
                 <div class="visual-side">
                     <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-bg">
                 </div>
             </div>
-
-            <div class="footer-brand-complete">
-                POWERED BY BLUEPRINT INTEGRATIONS LAB | BLUE LAB
-            </div>
+            <div id="status-display">SISTEMA LISTO</div>
+            <button class="vapi-btn" id="start-btn">HABLAR CON IRINA</button>
+            <div style="position: absolute; bottom: 20px; left: 60px; font-size: 9px; color: #d1d5db; font-weight: 700;">POWERED BY BLUE LAB</div>
         </div>
     </div>
     <script src="main.js"></script>
