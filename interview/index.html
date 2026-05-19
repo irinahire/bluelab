@@ -2,91 +2,54 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Entrevista - Irina</title>
-    <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.1/dist/bundle.js"></script>
+    <title>Auditoría de Token - Irina (v4.0)</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f6f9; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 400px; }
-        button { background: #00F2FE; color: black; border: none; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        #status { margin-top: 20px; font-weight: bold; color: #333; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; background: #f4f6f9; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 500px; width: 100%; word-wrap: break-word; }
+        .token-box { background: #222; color: #00FF00; padding: 15px; border-radius: 5px; font-family: monospace; text-align: left; font-size: 14px; margin-top: 10px; overflow-x: auto; }
+        button { background: #FF5555; color: white; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>Entrevista con Irina</h2>
-        <p>Presioná el botón para iniciar la conversación por voz.</p>
-        <button id="btn-hablar" onclick="conectarConIrina()">Iniciar llamada</button>
-        <div id="status">Verificando credenciales...</div>
+        <h2>Control de Seguridad - Versión 4.0</h2>
+        <p>Esta versión solo analiza qué te está mandando Bubble para descubrir por qué Retell lo rechaza.</p>
+        
+        <div id="status" style="font-weight: bold; color: blue;">Analizando URL...</div>
+        
+        <h3 style="text-align: left; margin-top: 20px;">Token Detectado en Barra de Direcciones:</h3>
+        <div id="token-display" class="token-box">Ninguno</div>
+        
+        <p style="text-align: left; font-size: 12px; color: #666; margin-top: 10px;">
+            * Nota: Los tokens de Retell válidos suelen empezar con "key_" o un texto largo sin espacios.
+        </p>
+
+        <button onclick="volverAProbar()">Probar de nuevo</button>
     </div>
 
     <script>
-        // 1. Capturamos el token que mandó Bubble en la URL
+        // Capturamos el texto exacto de la URL
         const parametros = new URLSearchParams(window.location.search);
         const tokenRecibido = parametros.get('token');
+        
+        const tokenDisplay = document.getElementById("token-display");
         const statusDiv = document.getElementById("status");
-        const btnHablar = document.getElementById("btn-hablar");
 
         window.onload = function() {
             if (tokenRecibido) {
-                statusDiv.innerText = "Conexión lista. Ya podés iniciar la llamada.";
+                statusDiv.innerText = "⚠️ Token recibido. Analizá si es correcto abajo:";
+                // Mostramos el token textualmente en pantalla
+                tokenDisplay.innerText = tokenRecibido;
             } else {
-                statusDiv.innerText = "⚠️ Error: No se detectó el token de acceso en la URL.";
-                btnHablar.disabled = true;
+                statusDiv.innerText = "🚨 ERROR: Bubble abrió esta página pero NO mandó ningún token en la URL.";
+                tokenDisplay.innerText = "VACÍO (undefined)";
             }
         };
 
-        function conectarConIrina() {
-            try {
-                statusDiv.innerText = "Buscando canal de audio...";
-                
-                let sdkVoz = null;
-
-                // ESCÁNER AUTOMÁTICO: Probamos las formas en las que Retell se registra
-                if (window.Retell && typeof window.Retell.RetellWebClient === 'function') {
-                    sdkVoz = window.Retell.RetellWebClient;
-                } else if (window.Retell && typeof window.Retell.Retell === 'function') {
-                    sdkVoz = window.Retell.Retell;
-                } else if (typeof window.RetellWebClient === 'function') {
-                    sdkVoz = window.RetellWebClient;
-                } else if (window.Retell) {
-                    // Si es un objeto plano, intentamos usarlo directamente
-                    sdkVoz = window.Retell;
-                }
-
-                if (!sdkVoz) {
-                    throw new Error("La librería de Retell no se cargó correctamente en el navegador.");
-                }
-
-                statusDiv.innerText = "Conectando micrófono con Irina...";
-                
-                // Inicializamos de manera segura probando si requiere 'new' o invocación directa
-                const client = (sdkVoz.prototype && sdkVoz.prototype.constructor) ? new sdkVoz() : sdkVoz();
-                
-                // Encendemos los sensores de escucha
-                client.on("call_started", () => { 
-                    statusDiv.innerText = "🟢 ¡En línea! Irina te está escuchando..."; 
-                });
-                
-                client.on("call_ended", () => { 
-                    statusDiv.innerText = "🔴 Llamada finalizada."; 
-                    btnHablar.disabled = false;
-                });
-                
-                client.on("error", (err) => { 
-                    statusDiv.innerText = "🚨 Error de Retell: " + err; 
-                    btnHablar.disabled = false;
-                });
-
-                // Lanzamos la llamada
-                client.startCall({ accessToken: tokenRecibido });
-
-            } catch (error) {
-                statusDiv.innerText = "🚨 Falló la conexión física: " + error.message;
-                btnHablar.disabled = false;
-                console.error(error);
-            }
+        function volverAProbar() {
+            // Recarga la página para verificar si cambia algo
+            window.location.reload();
         }
     </script>
 </body>
