@@ -2,54 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Auditoría de Token - Irina (v4.0)</title>
+    <title>Entrevista - Irina (v5.0)</title>
+    <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.1/dist/bundle.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; background: #f4f6f9; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 500px; width: 100%; word-wrap: break-word; }
-        .token-box { background: #222; color: #00FF00; padding: 15px; border-radius: 5px; font-family: monospace; text-align: left; font-size: 14px; margin-top: 10px; overflow-x: auto; }
-        button { background: #FF5555; color: white; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f6f9; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 400px; }
+        button { background: #00F2FE; color: black; border: none; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        #status { margin-top: 20px; font-weight: bold; color: #333; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>Control de Seguridad - Versión 4.0</h2>
-        <p>Esta versión solo analiza qué te está mandando Bubble para descubrir por qué Retell lo rechaza.</p>
-        
-        <div id="status" style="font-weight: bold; color: blue;">Analizando URL...</div>
-        
-        <h3 style="text-align: left; margin-top: 20px;">Token Detectado en Barra de Direcciones:</h3>
-        <div id="token-display" class="token-box">Ninguno</div>
-        
-        <p style="text-align: left; font-size: 12px; color: #666; margin-top: 10px;">
-            * Nota: Los tokens de Retell válidos suelen empezar con "key_" o un texto largo sin espacios.
-        </p>
-
-        <button onclick="volverAProbar()">Probar de nuevo</button>
+        <h2>Entrevista con Irina</h2>
+        <p>Presioná el botón para iniciar la conversación por voz.</p>
+        <button id="btn-hablar" onclick="conectarConIrina()">Iniciar llamada (v5.0)</button>
+        <div id="status">Verificando credenciales...</div>
     </div>
 
     <script>
-        // Capturamos el texto exacto de la URL
         const parametros = new URLSearchParams(window.location.search);
         const tokenRecibido = parametros.get('token');
-        
-        const tokenDisplay = document.getElementById("token-display");
         const statusDiv = document.getElementById("status");
 
         window.onload = function() {
             if (tokenRecibido) {
-                statusDiv.innerText = "⚠️ Token recibido. Analizá si es correcto abajo:";
-                // Mostramos el token textualmente en pantalla
-                tokenDisplay.innerText = tokenRecibido;
+                statusDiv.innerText = "🔑 Token detectado. Listo para iniciar.";
             } else {
-                statusDiv.innerText = "🚨 ERROR: Bubble abrió esta página pero NO mandó ningún token en la URL.";
-                tokenDisplay.innerText = "VACÍO (undefined)";
+                statusDiv.innerText = "🚨 Error: No se detectó ningún token en la URL.";
             }
         };
 
-        function volverAProbar() {
-            // Recarga la página para verificar si cambia algo
-            window.location.reload();
+        function conectarConIrina() {
+            if (!tokenRecibido) return;
+
+            try {
+                statusDiv.innerText = "Conectando micrófono con Irina...";
+                
+                let sdkVoz = window.Retell?.RetellWebClient || window.Retell?.Retell || window.RetellWebClient || window.Retell;
+                
+                if (!sdkVoz) {
+                    statusDiv.innerText = "🚨 Error: No se pudo cargar la librería de Retell.";
+                    return;
+                }
+
+                const client = (sdkVoz.prototype && sdkVoz.prototype.constructor) ? new sdkVoz() : sdkVoz();
+                
+                client.on("call_started", () => { 
+                    statusDiv.innerText = "🟢 ¡En línea! Irina te está escuchando."; 
+                });
+                
+                client.on("call_ended", () => { 
+                    statusDiv.innerText = "🔴 Llamada finalizada."; 
+                });
+                
+                client.on("error", (err) => { 
+                    statusDiv.innerText = "🚨 Error de conexión: " + (err.message || JSON.stringify(err)); 
+                });
+
+                client.startCall({ accessToken: tokenRecibido });
+
+            } catch (error) {
+                statusDiv.innerText = "🚨 Falló la inicialización: " + error.message;
+            }
         }
     </script>
 </body>
