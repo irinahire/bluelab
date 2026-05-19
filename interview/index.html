@@ -3,66 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Irina Hire Selection | Portal de Entrevista</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <title>Validación de Candidato - Irina</title>
+    <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.1/dist/bundle.js"></script>
     <style>
-        :root {
-            --irina-gradient: linear-gradient(to right, #bc8abf 0%, #96e8da 100%);
-            --bg-dark: #05070a;
-            --text-dark: #111827;
-            --text-gray: #4b5563;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+            color: white;
         }
-        body { margin: 0; padding: 0; background: var(--bg-dark); font-family: 'Inter', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .outer-frame { padding: 10px; background: var(--irina-gradient); border-radius: 50px; width: 92%; max-width: 1150px; height: 85vh; display: flex; position: relative; }
-        .app-container { background: white; width: 100%; height: 100%; border-radius: 40px; display: flex; flex-direction: column; position: relative; }
-        .top-vincha { width: 100%; height: 90px; background: var(--irina-gradient); display: flex; align-items: center; justify-content: space-between; padding: 0 45px; box-sizing: border-box; border-radius: 40px 40px 0 0; }
-        .brand-left { display: flex; flex-direction: column; color: white; line-height: 1.1; font-family: 'Montserrat', sans-serif; }
-        .blue-lab-text { font-weight: 900; font-size: 26px; letter-spacing: -1px; }
-        .blueprint-subtext { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.95; }
-        .vincha-title { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 24px; text-transform: uppercase; background: white; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-image: var(--irina-gradient); filter: drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white); }
-        .main-body { flex: 1; display: flex; position: relative; border-radius: 0 0 40px 40px; overflow: hidden; }
-        .info-side { flex: 1.3; padding: 40px 60px; display: flex; flex-direction: column; justify-content: center; }
-        .section-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 25px; color: var(--text-dark); border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; display: inline-block; }
-        .checklist { list-style: none; padding: 0; margin: 0; }
-        .checklist li { margin-bottom: 12px; font-size: 12px; display: flex; align-items: flex-start; color: var(--text-gray); line-height: 1.4; }
-        .checklist li .icon { width: 25px; flex-shrink: 0; }
-        .checklist li b { color: var(--text-dark); font-weight: 700; width: 135px; display: inline-block; flex-shrink: 0; }
-        .visual-side { flex: 1; position: relative; background: #fdfdfd; border-left: 1px solid #f3f4f6; }
-        .irina-bg { position: absolute; top: 0; right: 0; height: 100%; width: auto; object-fit: cover; }
-        .vapi-btn { border-radius: 14px; width: 280px; height: 60px; background: var(--irina-gradient); position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 999; border: none; color: white; font-weight: 800; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
-        #status-display { position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 800; color: #bc8abf; letter-spacing: 1px; text-transform: uppercase; }
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        button {
+            background: #F35588;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 15px rgba(243, 85, 136, 0.4);
+        }
+        button:hover {
+            transform: scale(1.05);
+            background: #e04477;
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <div class="outer-frame">
-        <div class="app-container">
-            <div class="top-vincha">
-                <div class="brand-left">
-                    <span class="blue-lab-text">BLUE LAB</span>
-                    <span class="blueprint-subtext">Blueprint Integrations Lab</span>
-                </div>
-                <div class="vincha-title">Irina Hire Selection</div>
-            </div>
-            <div class="main-body">
-                <div class="info-side">
-                    <div class="section-box">
-                        <h3>RECOMENDACIONES:</h3>
-                        <ul class="checklist">
-                            <li><span class="icon">🎧</span> <b>Audio:</b><span>Use auriculares para evitar eco.</span></li>
-                            <li><span class="icon">🤫</span> <b>Entorno:</b><span>Busque un lugar silencioso.</span></li>
-                            <li><span class="icon">🗣️</span> <b>Charla:</b><span>Hable de forma clara y pausada.</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="visual-side">
-                    <img src="https://i.ibb.co/DPdwz5BK/pages-entrevista-01.jpg" class="irina-bg">
-                </div>
-            </div>
-            <div id="status-display">SISTEMA LISTO</div>
-            <button class="vapi-btn" id="start-btn">HABLAR CON IRINA</button>
-            <div style="position: absolute; bottom: 20px; left: 60px; font-size: 9px; color: #d1d5db; font-weight: 700;">POWERED BY BLUE LAB</div>
-        </div>
+
+    <div class="card">
+        <h2>Entrevista con Irina</h2>
+        <p>Presioná el botón para iniciar la validación por voz de tu perfil.</p>
+        <br>
+        <button id="start-btn" onclick="iniciarEntrevista()">Hablar con Irina</button>
+        <div id="status">Esperando inicialización...</div>
     </div>
-    <script src="main.js"></script>
+
+    <script>
+        const statusDiv = document.getElementById("status");
+        const startBtn = document.getElementById("start-btn");
+        let client = null;
+
+        // 1. Leer el token que viene desde Bubble en la URL (?token=XXXX)
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('token');
+
+        // 2. Verificar que el objeto de Retell bajó correctamente al navegador
+        window.onload = function() {
+            if (window.Retell && window.Retell.RetellWebClient) {
+                try {
+                    // Inicializamos el cliente de voz nativo de la forma correcta
+                    client = new window.Retell.RetellWebClient();
+                    statusDiv.innerText = "Listo para conectar";
+                    
+                    // Configuramos los sensores de escucha
+                    client.on("call_started", () => {
+                        statusDiv.innerText = "🟢 Conectado. Irina está hablando...";
+                    });
+
+                    client.on("call_ended", () => {
+                        statusDiv.innerText = "🔴 Llamada finalizada.";
+                        startBtn.disabled = false;
+                    });
+
+                    client.on("error", (error) => {
+                        statusDiv.innerText = "🚨 Error de Retell: " + error;
+                        startBtn.disabled = false;
+                    });
+
+                } catch (e) {
+                    statusDiv.innerText = "🚨 Error al inicializar cliente: " + e.message;
+                }
+            } else {
+                statusDiv.innerText = "🚨 No se pudo cargar la librería de Retell.";
+            }
+        };
+
+        // 3. Ejecutar la llamada al hacer clic
+        function iniciarEntrevista() {
+            if (!accessToken) {
+                alert("Error: No se detectó ningún token de acceso en la URL.");
+                return;
+            }
+            if (!client) {
+                alert("El cliente de audio no está listo.");
+                return;
+            }
+
+            try {
+                startBtn.disabled = true;
+                statusDiv.innerText = "Conectando con Irina...";
+                
+                // Lanzamos la llamada WebRTC nativa
+                client.startCall({ accessToken: accessToken });
+            } catch (error) {
+                statusDiv.innerText = "🚨 Error al iniciar llamada: " + error.message;
+                startBtn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
