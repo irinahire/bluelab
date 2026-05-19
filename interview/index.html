@@ -6,8 +6,9 @@
     <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.1/dist/bundle.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f6f9; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 400px; }
         button { background: #00F2FE; color: black; border: none; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
         #status { margin-top: 20px; font-weight: bold; color: #333; }
     </style>
 </head>
@@ -15,40 +16,76 @@
 
     <div class="card">
         <h2>Entrevista con Irina</h2>
-        <p>Presioná el botón para iniciar la conversación.</p>
+        <p>Presioná el botón para iniciar la conversación por voz.</p>
         <button id="btn-hablar" onclick="conectarConIrina()">Iniciar llamada</button>
-        <div id="status">Esperando señal...</div>
+        <div id="status">Verificando credenciales...</div>
     </div>
 
     <script>
-        // 1. Capturamos el token que viaja escondido en la URL de la página
+        // 1. Capturamos el token que mandó Bubble en la URL
         const parametros = new URLSearchParams(window.location.search);
         const tokenRecibido = parametros.get('token');
-
         const statusDiv = document.getElementById("status");
+        const btnHablar = document.getElementById("btn-hablar");
 
-        // 2. Avisamos en pantalla si todo está listo para arrancar
         window.onload = function() {
             if (tokenRecibido) {
-                statusDiv.innerText = "Conexión lista. Ya podés hablar con Irina.";
+                statusDiv.innerText = "Conexión lista. Ya podés iniciar la llamada.";
             } else {
-                statusDiv.innerText = "⚠️ Error: No se detectó el token de acceso.";
+                statusDiv.innerText = "⚠️ Error: No se detectó el token de acceso en la URL.";
+                btnHablar.disabled = true;
             }
         };
 
-        // 3. Cuando el usuario hace clic, se activa el micrófono directo
         function conectarConIrina() {
             try {
-                statusDiv.innerText = "Conectando audio...";
-                const client = new window.Retell.RetellWebClient();
+                statusDiv.innerText = "Buscando canal de audio...";
                 
-                client.on("call_started", () => { statusDiv.innerText = "🟢 En línea: Irina te está escuchando..."; });
-                client.on("call_ended", () => { statusDiv.innerText = "🔴 Llamada finalizada."; });
-                client.on("error", (err) => { statusDiv.innerText = "🚨 Error: " + err; });
+                let sdkVoz = null;
 
+                // ESCÁNER AUTOMÁTICO: Probamos las formas en las que Retell se registra
+                if (window.Retell && typeof window.Retell.RetellWebClient === 'function') {
+                    sdkVoz = window.Retell.RetellWebClient;
+                } else if (window.Retell && typeof window.Retell.Retell === 'function') {
+                    sdkVoz = window.Retell.Retell;
+                } else if (typeof window.RetellWebClient === 'function') {
+                    sdkVoz = window.RetellWebClient;
+                } else if (window.Retell) {
+                    // Si es un objeto plano, intentamos usarlo directamente
+                    sdkVoz = window.Retell;
+                }
+
+                if (!sdkVoz) {
+                    throw new Error("La librería de Retell no se cargó correctamente en el navegador.");
+                }
+
+                statusDiv.innerText = "Conectando micrófono con Irina...";
+                
+                // Inicializamos de manera segura probando si requiere 'new' o invocación directa
+                const client = (sdkVoz.prototype && sdkVoz.prototype.constructor) ? new sdkVoz() : sdkVoz();
+                
+                // Encendemos los sensores de escucha
+                client.on("call_started", () => { 
+                    statusDiv.innerText = "🟢 ¡En línea! Irina te está escuchando..."; 
+                });
+                
+                client.on("call_ended", () => { 
+                    statusDiv.innerText = "🔴 Llamada finalizada."; 
+                    btnHablar.disabled = false;
+                });
+                
+                client.on("error", (err) => { 
+                    statusDiv.innerText = "🚨 Error de Retell: " + err; 
+                    btnHablar.disabled = false;
+                });
+
+                // Lanzamos la llamada
                 client.startCall({ accessToken: tokenRecibido });
+
             } catch (error) {
-                statusDiv.innerText = "🚨 Error de inicialización: " + error.message;
+                statusDiv.innerText = "🚨 Falló la conexión física: " + error.message;
+                btnHablar.disabled = false;
+                console.error(error);
             }
         }
     </script>
