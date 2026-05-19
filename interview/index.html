@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrevista - Irina (v7.0 Oficial)</title>
-    <script src="https://unpkg.com/retell-client-js-sdk@latest/dist/bundle.js"></script>
+    <title>Entrevista - Irina (v6.1 Nativa Estable)</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; padding: 50px; background: #0f172a; color: #f8fafc; }
         .card { background: #1e293b; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: inline-block; max-width: 450px; border: 1px solid #334155; }
         h2 { color: #38bdf8; margin-top: 0; }
-        button { background: #06b6d4; color: #0f172a; border: none; padding: 16px 32px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 15px; }
+        button { background: #06b6d4; color: #0f172a; border: none; padding: 16px 32px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 15px; }
         button:hover { background: #22d3ee; }
         #status { margin-top: 25px; font-weight: bold; font-size: 14px; padding: 12px; border-radius: 6px; background: #0f172a; border: 1px solid #1e293b; }
     </style>
@@ -19,17 +18,21 @@
     <div class="card">
         <h2>Entrevista con Irina</h2>
         <p>Hacé clic abajo para iniciar la validación por voz.</p>
-        <button id="btn-accion" onclick="conectarConIrina()">Iniciar llamada de voz</button>
+        <button id="btn-accion" onclick="controlarLlamada()">Iniciar llamada de voz (v6.1)</button>
         <div id="status">Verificando datos de acceso...</div>
     </div>
 
     <script>
         const parametros = new URLSearchParams(window.location.search);
         const tokenRecibido = parametros.get('token');
+        
         const statusDiv = document.getElementById("status");
         const btnAccion = document.getElementById("btn-accion");
         
-        let clienteRetell = null;
+        let websocket = null;
+        let contextoAudio = null;
+        let flujoMicrofono = null;
+        let procesadorAudio = null;
         let estaLlamando = false;
 
         window.onload = function() {
@@ -41,66 +44,114 @@
             }
         };
 
-        function conectarConIrina() {
-            if (!tokenRecibido) return;
-
+        async function controlarLlamada() {
             if (estaLlamando) {
-                clgEnd();
-                return;
+                finalizarLlamada();
+            } else {
+                await iniciarConexionNativa();
             }
+        }
 
+        async function iniciarConexionNativa() {
             try {
-                statusDiv.innerText = "Iniciando componentes de audio...";
-
-                // Buscamos el constructor correcto dentro del paquete global de unpkg
-                const RetellClient = window.RetellWebClient || window.Retell?.RetellWebClient;
+                statusDiv.innerText = "Solicitando permiso para usar el micrófono...";
+                flujoMicrofono = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 16000, channelCount: 1 } });
                 
-                if (!RetellClient) {
-                    statusDiv.innerHTML = "🚨 <span style='color: #f87171;'>Error interno: No se pudo mapear el SDK de voz.</span>";
-                    return;
-                }
+                statusDiv.innerText = "Estableciendo puente de conexión con Irina...";
+                // Conexión nativa directa por WebSocket
+                websocket = new WebSocket(`wss://api.retellai.com/v2/initiate-web-call-websocket?accessToken=${tokenRecibido}`);
 
-                // Creamos la instancia oficial
-                clienteRetell = new RetellClient();
-
-                // Configuramos los disparadores de estado oficiales de Retell
-                clienteRetell.on("call_started", () => {
+                websocket.onopen = () => {
                     estaLlamando = true;
                     btnAccion.innerText = "Finalizar llamada";
                     btnAccion.style.background = "#ef4444";
                     btnAccion.style.color = "#ffffff";
-                    statusDiv.innerHTML = "🟢 <span style='color: #4ade80;'>¡En línea! Irina te está escuchando.</span>";
-                });
+                    statusDiv.innerHTML = "🟢 <span style='color: #4ade80;'>¡En línea! Irina te está escuchando de forma directa.</span>";
+                    
+                    conectarAudioNativo();
+                };
 
-                clienteRetell.on("call_ended", () => {
-                    clgEnd();
-                });
+                websocket.onmessage = async (evento) => {
+                    try {
+                        const datos = JSON.parse(evento.data);
+                        if (datos.audio) {
+                            reproducirRespuestaIrina(datos.audio);
+                        }
+                    } catch (e) {
+                        // Ignoramos mensajes de control que no sean audio para no saturar
+                    }
+                };
 
-                clienteRetell.on("error", (err) => {
-                    statusDiv.innerHTML = "🚨 <span style='color: #f87171;'>Error de llamada: " + (err.message || "Conexión rechazada") + "</span>";
-                    clgEnd();
-                });
+                websocket.onerror = (error) => {
+                    statusDiv.innerHTML = "🚨 <span style='color: #f87171;'>Error de comunicación con el servidor.</span>";
+                    finalizarLlamada();
+                };
 
-                // Lanzamos la llamada usando el método nativo del SDK
-                statusDiv.innerText = "Conectando micrófono con Irina...";
-                clienteRetell.startCall({ accessToken: tokenRecibido });
+                websocket.onclose = () => {
+                    statusDiv.innerText = "Llamada terminada.";
+                    finalizarLlamada();
+                };
 
-            } catch (error) {
-                statusDiv.innerHTML = "🚨 <span style='color: #f87171;'>Fallo crítico: " + error.message + "</span>";
-                clgEnd();
+            } catch (err) {
+                statusDiv.innerHTML = "🚨 <span style='color: #f87171;'>Error de micrófono: " + err.message + "</span>";
+                finalizarLlamada();
             }
         }
 
-        function clgEnd() {
+        function conectarAudioNativo() {
+            // Ajustamos el contexto de audio nativo de forma estricta para Retell
+            contextoAudio = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+            const origen = contextoAudio.createMediaStreamSource(flujoMicrofono);
+            
+            // Usamos un tamaño de buffer estándar de 4096 para estabilizar el flujo de datos
+            procesadorAudio = contextoAudio.createScriptProcessor(4096, 1, 1);
+
+            procesadorAudio.onaudioprocess = (eventoInput) => {
+                if (!estaLlamando || websocket.readyState !== WebSocket.OPEN) return;
+                
+                const canalInput = eventoInput.inputBuffer.getChannelData(0);
+                const bufferInt16 = new Int16Array(canalInput.length);
+                
+                // Conversión limpia a PCM de 16 bits sin pérdidas
+                for (let i = 0; i < canalInput.length; i++) {
+                    let s = Math.max(-1, Math.min(1, canalInput[i]));
+                    bufferInt16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                }
+                
+                websocket.send(bufferInt16.buffer);
+            };
+
+            origen.connect(procesadorAudio);
+            procesadorAudio.connect(contextoAudio.destination);
+        }
+
+        function reproducirRespuestaIrina(base64Audio) {
+            if (!contextoAudio) return;
+            
+            const binario = atob(base64Audio);
+            const arrayBifurcado = new Uint8Array(binario.length);
+            for (let i = 0; i < binario.length; i++) {
+                arrayBifurcado[i] = binario.charCodeAt(i);
+            }
+            
+            contextoAudio.decodeAudioData(arrayBifurcado.buffer, (buffer) => {
+                const fuenteNodo = contextoAudio.createBufferSource();
+                fuenteNodo.buffer = buffer;
+                fuenteNodo.connect(contextoAudio.destination);
+                fuenteNodo.start(0);
+            }).catch(e => console.log("Error decodificando respuesta"));
+        }
+
+        function finalizarLlamada() {
             estaLlamando = false;
-            btnAccion.innerText = "Iniciar llamada de voz";
+            btnAccion.innerText = "Iniciar llamada de voz (v6.1)";
             btnAccion.style.background = "#06b6d4";
             btnAccion.style.color = "#0f172a";
-            statusDiv.innerHTML = "Llamada terminada.";
-            if (clienteRetell) {
-                try { clienteRetell.stopCall(); } catch(e){}
-                clienteRetell = null;
-            }
+            
+            if (procesadorAudio) { try { procesadorAudio.disconnect(); } catch(e){} procesadorAudio = null; }
+            if (flujoMicrofono) { try { flujoMicrofono.getTracks().forEach(track => track.stop()); } catch(e){} flujoMicrofono = null; }
+            if (contextoAudio) { try { contextoAudio.close(); } catch(e){} contextoAudio = null; }
+            if (websocket) { if (websocket.readyState === WebSocket.OPEN) websocket.close(); websocket = null; }
         }
     </script>
 </body>
