@@ -2,129 +2,53 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validación de Candidato - Irina</title>
+    <title>Entrevista - Irina</title>
     <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.1/dist/bundle.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
-            color: white;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-            width: 90%;
-        }
-        button {
-            background: #F35588;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-            box-shadow: 0 4px 15px rgba(243, 85, 136, 0.4);
-        }
-        button:hover {
-            transform: scale(1.05);
-            background: #e04477;
-        }
-        button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        #status {
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f6f9; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; }
+        button { background: #00F2FE; color: black; border: none; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        #status { margin-top: 20px; font-weight: bold; color: #333; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h2>Entrevista con Irina</h2>
-        <p>Presioná el botón para iniciar la validación por voz de tu perfil.</p>
-        <br>
-        <button id="start-btn" onclick="iniciarEntrevista()">Hablar con Irina</button>
-        <div id="status">Esperando inicialización...</div>
+        <p>Presioná el botón para iniciar la conversación.</p>
+        <button id="btn-hablar" onclick="conectarConIrina()">Iniciar llamada</button>
+        <div id="status">Esperando señal...</div>
     </div>
 
     <script>
+        // 1. Capturamos el token que viaja escondido en la URL de la página
+        const parametros = new URLSearchParams(window.location.search);
+        const tokenRecibido = parametros.get('token');
+
         const statusDiv = document.getElementById("status");
-        const startBtn = document.getElementById("start-btn");
-        let client = null;
 
-        // 1. Leer el token que viene desde Bubble en la URL (?token=XXXX)
-        const urlParams = new URLSearchParams(window.location.search);
-        const accessToken = urlParams.get('token');
-
-        // 2. Verificar que el objeto de Retell bajó correctamente al navegador
+        // 2. Avisamos en pantalla si todo está listo para arrancar
         window.onload = function() {
-            if (window.Retell && window.Retell.RetellWebClient) {
-                try {
-                    // Inicializamos el cliente de voz nativo de la forma correcta
-                    client = new window.Retell.RetellWebClient();
-                    statusDiv.innerText = "Listo para conectar";
-                    
-                    // Configuramos los sensores de escucha
-                    client.on("call_started", () => {
-                        statusDiv.innerText = "🟢 Conectado. Irina está hablando...";
-                    });
-
-                    client.on("call_ended", () => {
-                        statusDiv.innerText = "🔴 Llamada finalizada.";
-                        startBtn.disabled = false;
-                    });
-
-                    client.on("error", (error) => {
-                        statusDiv.innerText = "🚨 Error de Retell: " + error;
-                        startBtn.disabled = false;
-                    });
-
-                } catch (e) {
-                    statusDiv.innerText = "🚨 Error al inicializar cliente: " + e.message;
-                }
+            if (tokenRecibido) {
+                statusDiv.innerText = "Conexión lista. Ya podés hablar con Irina.";
             } else {
-                statusDiv.innerText = "🚨 No se pudo cargar la librería de Retell.";
+                statusDiv.innerText = "⚠️ Error: No se detectó el token de acceso.";
             }
         };
 
-        // 3. Ejecutar la llamada al hacer clic
-        function iniciarEntrevista() {
-            if (!accessToken) {
-                alert("Error: No se detectó ningún token de acceso en la URL.");
-                return;
-            }
-            if (!client) {
-                alert("El cliente de audio no está listo.");
-                return;
-            }
-
+        // 3. Cuando el usuario hace clic, se activa el micrófono directo
+        function conectarConIrina() {
             try {
-                startBtn.disabled = true;
-                statusDiv.innerText = "Conectando con Irina...";
+                statusDiv.innerText = "Conectando audio...";
+                const client = new window.Retell.RetellWebClient();
                 
-                // Lanzamos la llamada WebRTC nativa
-                client.startCall({ accessToken: accessToken });
+                client.on("call_started", () => { statusDiv.innerText = "🟢 En línea: Irina te está escuchando..."; });
+                client.on("call_ended", () => { statusDiv.innerText = "🔴 Llamada finalizada."; });
+                client.on("error", (err) => { statusDiv.innerText = "🚨 Error: " + err; });
+
+                client.startCall({ accessToken: tokenRecibido });
             } catch (error) {
-                statusDiv.innerText = "🚨 Error al iniciar llamada: " + error.message;
-                startBtn.disabled = false;
+                statusDiv.innerText = "🚨 Error de inicialización: " + error.message;
             }
         }
     </script>
